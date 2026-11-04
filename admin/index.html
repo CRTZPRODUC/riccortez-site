@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel · Ric Cortez</title>
+  <!-- Store admin panel. Access needs a Supabase Auth account flagged as admin
+       (supabase/migrations/*_orders_admin.sql); the data is protected by row level security,
+       not by this page. -->
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-style='italic' font-size='20' text-anchor='middle' fill='%23d4a437'%3ER%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="../assets/css/admin.css">
+  <script type="module" src="../assets/js/admin.js"></script>
+</head>
+<body>
+  <header class="adm-top">
+    <img class="adm-logo" src="../assets/img/logo-gold-pro.webp" width="776" height="322" alt="Ric Cortez Gold Pro">
+    <span class="adm-title">Painel</span>
+    <span class="adm-live" data-live hidden><i></i> Ao vivo</span>
+    <span class="adm-spacer"></span>
+    <span class="adm-user" data-user></span>
+    <button class="adm-btn adm-btn--ghost" type="button" data-signout hidden>Sair</button>
+  </header>
+
+  <main class="adm-main">
+    <form class="adm-login" data-login hidden novalidate>
+      <h1>Acesso restrito</h1>
+      <p class="adm-muted">Entre com a conta de administrador.</p>
+      <label>E-mail<input type="email" name="email" autocomplete="username" required></label>
+      <label>Senha<input type="password" name="password" autocomplete="current-password" required></label>
+      <button class="adm-btn" type="submit">Entrar</button>
+      <p class="adm-msg" data-login-msg role="alert"></p>
+    </form>
+
+    <section data-panel hidden>
+      <div class="adm-stats" data-stats></div>
+
+      <div class="adm-tools">
+        <div class="adm-chips" role="tablist" data-filters></div>
+        <input class="adm-search" type="search" placeholder="Buscar por pedido, nome, e-mail, CPF ou cidade" data-search aria-label="Buscar pedidos">
+      </div>
+
+      <div data-list class="adm-list"><p class="adm-muted">Carregando...</p></div>
+    </section>
+  </main>
+
+  <div class="adm-toast" data-toast role="status" aria-live="polite"></div>
+</body>
+</html>

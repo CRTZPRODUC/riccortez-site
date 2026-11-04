@@ -3,7 +3,7 @@
 // Orders come straight from the `orders` table: row level security returns only the rows whose
 // customer e-mail matches the signed-in account (supabase/migrations/*_orders_customer_read.sql).
 import { boot, icon, money, esc, $, $$ } from './app.js';
-import { supa } from './auth.js';
+import { supa, captchaToken } from './auth.js';
 
 boot({ active: 'conta' });
 
@@ -46,6 +46,7 @@ function authError(err) {
   if (/password/i.test(m) && /(least|short|weak)/i.test(m)) return 'A senha precisa ter pelo menos 6 caracteres.';
   if (/same.*password|different from the old/i.test(m)) return 'A nova senha precisa ser diferente da atual.';
   if (/invalid.*email|email.*invalid/i.test(m)) return 'Esse e-mail não parece válido.';
+  if (/captcha/i.test(m)) return 'Não conseguimos confirmar que você não é um robô. Recarregue a página e tente de novo.';
   if (/fetch|network|load failed/i.test(m)) return 'Sem conexão com o servidor. Confira sua internet e tente de novo.';
   return 'Não deu certo agora. Tente de novo em instantes.';
 }
@@ -76,6 +77,7 @@ loginForm.addEventListener('submit', (e) => {
     const { error } = await (await supa()).auth.signInWithPassword({
       email: loginForm.email.value.trim(),
       password: loginForm.password.value,
+      options: { captchaToken: await captchaToken(loginForm) },
     });
     if (error) note(loginForm, authError(error));
     // Success is handled by onAuthStateChange (SIGNED_IN).
@@ -86,7 +88,8 @@ loginForm.addEventListener('click', (e) => {
   if (!e.target.closest('[data-resend]')) return;
   e.preventDefault();
   const email = loginForm.email.value.trim();
-  supa().then((s) => s.auth.resend({ type: 'signup', email, options: { emailRedirectTo: pageUrl } }))
+  Promise.all([supa(), captchaToken(loginForm)])
+    .then(([s, captchaToken]) => s.auth.resend({ type: 'signup', email, options: { emailRedirectTo: pageUrl, captchaToken } }))
     .then(({ error }) => note(loginForm, error ? authError(error) : `Enviamos um novo link para <b>${esc(email)}</b>.`))
     .catch((err) => note(loginForm, authError(err)));
 });
@@ -99,7 +102,7 @@ signupForm.addEventListener('submit', (e) => {
     const { data, error } = await (await supa()).auth.signUp({
       email,
       password: signupForm.password.value,
-      options: { data: { name: signupForm.name.value.trim() }, emailRedirectTo: pageUrl },
+      options: { data: { name: signupForm.name.value.trim() }, emailRedirectTo: pageUrl, captchaToken: await captchaToken(signupForm) },
     });
     if (error) { note(signupForm, authError(error)); return; }
     // With e-mail confirmation on, an address that already has an account comes back with no
@@ -123,7 +126,8 @@ $('[data-forgot]').addEventListener('click', (e) => {
     return;
   }
   const email = input.value.trim();
-  supa().then((s) => s.auth.resetPasswordForEmail(email, { redirectTo: pageUrl }))
+  Promise.all([supa(), captchaToken(loginForm)])
+    .then(([s, captchaToken]) => s.auth.resetPasswordForEmail(email, { redirectTo: pageUrl, captchaToken }))
     .then(({ error }) => note(loginForm, error ? authError(error)
       : `Se houver uma conta com <b>${esc(email)}</b>, enviamos um link para criar uma nova senha.`))
     .catch((err) => note(loginForm, authError(err)));

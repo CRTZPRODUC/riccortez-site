@@ -2,7 +2,7 @@
 // Sign-in is Supabase Auth; only accounts with app_metadata.role = "admin" get any rows back
 // (row level security, supabase/migrations/*_orders_admin.sql). Admins can change only the
 // shipping fields here; marking an order as shipped e-mails the customer the tracking code.
-import { supa } from './auth.js';
+import { supa, captchaToken } from './auth.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -292,6 +292,7 @@ loginForm.addEventListener('submit', async (e) => {
   try {
     const { data, error } = await (await supa()).auth.signInWithPassword({
       email: loginForm.email.value.trim(), password: loginForm.password.value,
+      options: { captchaToken: await captchaToken(loginForm) },
     });
     if (error) { loginMsg.textContent = /invalid login/i.test(error.message) ? 'E-mail ou senha incorretos.' : 'Não deu para entrar agora.'; return; }
     loginForm.reset();

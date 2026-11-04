@@ -61,6 +61,8 @@ export const CONFIG = {
   // design: row level security decides what each visitor can read.
   SUPABASE_URL: 'https://grkodpfitwkvkukcerzm.supabase.co',
   SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_Jz_reV79ToyruSbIZlr0NA_1JpIdZcE',
+  // Cloudflare Turnstile site key (public). Supabase Auth checks the token with the secret key.
+  TURNSTILE_SITE_KEY: '0x4AAAAAAFy8m3oPa9seNyPA',
 
   // Dispatch time in business days for items kept in stock.
   DISPATCH_BUSINESS_DAYS: 2,

@@ -93,3 +93,4 @@ input:focus, select:focus { outline: 2px solid var(--gold); outline-offset: 1px;
   .adm-search { min-width: 0; flex-basis: 100%; }
   .adm-tools { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
 }
+.captcha { display: flex; justify-content: center; }

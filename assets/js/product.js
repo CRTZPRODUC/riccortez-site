@@ -83,7 +83,7 @@ function buyboxHTML(p, pr, cat) {
         ${p.stock ? '<span class="stock-ok">Disponível</span>' : '<span class="stock-off">Indisponível no momento</span>'}
       </div>
 
-      ${CONFIG.WARRANTY_1Y_SLUGS.includes(p.slug) ? `
+      ${(p.slug.includes('jackcap') || CONFIG.WARRANTY_1Y_SLUGS.includes(p.slug)) ? `
       <div class="pdp-seal">
         <span class="pdp-seal-ico">${icon('shield', 24)}</span>
         <div><b>1 ano de garantia</b><span>Este modelo tem garantia de fábrica de 1 ano.</span></div>
@@ -97,7 +97,7 @@ function buyboxHTML(p, pr, cat) {
       </div>
 
       ${p.stock ? (madeToOrder ? `
-      <p class="pdp-notice">${icon('clock', 18)}<span><b>Feito sob demanda.</b> Produzimos este item sob encomenda para garantir o máximo de qualidade. O despacho é em até ${CONFIG.MADE_TO_ORDER.days} dias.</span></p>` : `
+      <p class="pdp-notice">${icon('clock', 18)}<span><b>Feito sob demanda.</b> Produzimos este item sob encomenda para garantir o máximo de qualidade. O despacho é em até ${CONFIG.MADE_TO_ORDER.days} dias úteis.</span></p>` : `
       <p class="pdp-dispatch">${icon('truck', 16)} Despacho em até ${CONFIG.DISPATCH_BUSINESS_DAYS} dias úteis</p>`) : ''}
 
       ${p.stock ? `
@@ -279,7 +279,7 @@ function notFound() {
       cepMsg.innerHTML = `<ul class="ship-quotes">${data.options.map((o) => `
         <li><span><b>${esc(o.name)}</b> · até ${range(o)} dias úteis</span>
         <strong${o.free ? ' class="ship-free"' : ''}>${o.price < o.original_price ? `<s>${money(o.original_price)}</s> ` : ''}${o.free ? 'Grátis' : money(o.price)}</strong></li>`).join('')}</ul>
-        <span class="ship-note">O prazo inclui o despacho de até ${data.options[0].dispatch_days} dias e conta a partir da confirmação do pagamento.${data.subtotal < data.free_min ? ` ${freeNote}` : ` O frete grátis cobre até ${money(data.free_subsidy)} e você paga só o que passar disso.`}</span>`;
+        <span class="ship-note">O prazo inclui o despacho de até ${data.options[0].dispatch_days} dias úteis e conta a partir da confirmação do pagamento.${data.subtotal < data.free_min ? ` ${freeNote}` : ` O frete grátis cobre até ${money(data.free_subsidy)} e você paga só o que passar disso.`}</span>`;
     } catch {
       cepMsg.textContent = `Não conseguimos calcular agora. ${freeNote}`;
     }

@@ -77,6 +77,7 @@ export const CONFIG = {
 
   // Every product has the 90-day legal warranty. These models (Jackcap 1, 2 and 3 with their
   // variants, and Gold Extreme Bass) carry a 1-year warranty, shown as a seal on the product page.
+  // Every product whose slug contains "jackcap" gets it too, so new Jackcap items need no entry here (owner, 2026-11-04).
   WARRANTY_LEGAL_DAYS: 90,
   WARRANTY_1Y_SLUGS: [
     'jackcap-1-up', 'jackcap-1-up-com-cabo-p10', 'kit-5-captadores-jackcap-1-up', 'jackcap-1-ex',

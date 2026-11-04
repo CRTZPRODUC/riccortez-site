@@ -178,13 +178,23 @@ function markInvalid(names) {
   errBox.textContent = `Confira: ${names.map((n) => FIELD_NAMES[n] || n).join(', ')}.`;
 }
 
+// CPF with valid check digits (the carriers and the invoice reject anything else).
+function validCpf(d) {
+  if (!/^\d{11}$/.test(d) || /^(\d)\1{10}$/.test(d)) return false;
+  for (const n of [9, 10]) {
+    let sum = 0;
+    for (let i = 0; i < n; i++) sum += Number(d[i]) * (n + 1 - i);
+    if ((sum * 10) % 11 % 10 !== Number(d[n])) return false;
+  }
+  return true;
+}
+
 function localCheck() {
   const bad = [];
   if (form.name.value.trim().split(/\s+/).length < 2) bad.push('name');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.value.trim())) bad.push('email');
   if (!/^\d{10,11}$/.test(digits(form.phone.value))) bad.push('phone');
-  const cpf = digits(form.cpf.value);
-  if (cpf && cpf.length !== 11) bad.push('cpf');
+  if (!validCpf(digits(form.cpf.value))) bad.push('cpf');
   if (digits(form.cep.value).length !== 8) bad.push('cep');
   for (const k of ['street', 'number', 'neighborhood', 'city']) if (!form[k].value.trim()) bad.push(k);
   if (!/^[A-Z]{2}$/.test(form.state.value)) bad.push('state');

@@ -44,7 +44,12 @@ function renderSummary() {
   $('[data-co-subtotal]').textContent = money(sub);
 
   const opt = quote?.options.find((o) => o.id === selected);
-  $('[data-co-ship]').textContent = opt ? (opt.free ? 'Grátis' : money(opt.price)) : '—';
+  // Free shipping shows GRÁTIS; above the subsidy only the part the customer pays is shown.
+  const shipEl = $('[data-co-ship]');
+  $('[data-co-ship-label]').textContent = opt ? `Frete (${opt.name})` : 'Frete';
+  shipEl.textContent = opt ? (opt.price > 0 ? money(opt.price) : 'Grátis') : 'Informe o CEP';
+  shipEl.classList.toggle('co-ship-free', !!opt && opt.price === 0);
+  shipEl.classList.toggle('muted', !opt);
   const total = sub + (opt ? opt.price : 0);
   $('[data-co-total]').textContent = money(total);
   // InfinitePay applies the Pix discount to the whole payment, shipping included.

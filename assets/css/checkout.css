@@ -41,6 +41,8 @@
 .co-ship-name small, .co-line-name small { color: var(--ink-3); font-size: 12.5px; }
 .co-ship-opt s { color: var(--ink-3); font-weight: 400; margin-right: 4px; }
 .co-ship-opt .ship-free { color: var(--green); }
+.co-ship-free { color: var(--green); text-transform: uppercase; letter-spacing: .04em; }
+.co-ship-row strong.muted { font-weight: 500; font-size: .875rem; }
 .co-box .ship-note { color: var(--ink-3); line-height: 1.5; }
 
 .co-summary { display: grid; gap: 12px; }

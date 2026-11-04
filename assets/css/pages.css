@@ -433,6 +433,19 @@
 .form-note { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; padding: 12px 14px; border-radius: var(--radius); background: var(--gold-soft); color: var(--ink-2); font-size: 13.5px; }
 .form-note .ico { color: var(--gold-text); margin-top: 2px; }
 .form-note:empty { display: none; }
+.form-note a { color: var(--gold-text); font-weight: 600; text-decoration: underline; }
+.account-dash h2 { font-size: 24px; margin-bottom: 4px; }
+.account-dash h3 { font-size: 16px; margin: 28px 0 12px; }
+.order-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.order-row { display: grid; gap: 4px; padding: 14px 16px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--bg); transition: border-color var(--dur) var(--ease); }
+.order-row:hover { border-color: var(--gold); }
+.order-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.order-items { font-size: 14px; color: var(--ink-2); overflow-wrap: anywhere; }
+.order-status { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--bg-2); white-space: nowrap; }
+.order-status.is-ok { color: var(--green); }
+.order-status.is-wait { color: var(--gold-text); }
+.order-status.is-bad { color: var(--red); }
+.account-dash-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
 
 /* ================================================================ RESPONSIVE */
 @media (max-width: 1180px) {

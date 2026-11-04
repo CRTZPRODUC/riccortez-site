@@ -26,12 +26,12 @@
           <div>
             <span class="eyebrow">Minha conta</span>
             <h1>Seu som, seus <em>pedidos</em>.</h1>
-            <p>Com a conta você acompanha pedidos, salva endereços e compra mais rápido.</p>
+            <p>Com a conta você acompanha seus pedidos e compra mais rápido.</p>
           </div>
           <ul class="features-list">
             <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Acompanhe seus pedidos</li>
-            <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Endereços salvos</li>
-            <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Checkout mais rápido</li>
+            <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Nome e e-mail já preenchidos no checkout</li>
+            <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Troca de senha pelo e-mail</li>
           </ul>
         </div>
 
@@ -42,10 +42,9 @@
           </div>
 
           <!--
-            Supabase Auth plugs in here.
-            Next phase: replace the submit handlers in assets/js/account.js with
-            supabase.auth.signInWithPassword / signUp / resetPasswordForEmail.
-            Until then these forms never send data anywhere.
+            Supabase Auth (assets/js/account.js): sign-in, sign-up with e-mail confirmation,
+            password reset and the signed-in view with the customer's orders. Orders are read
+            through row level security: each account sees only orders placed with its e-mail.
           -->
           <form class="auth-form" id="panel-login" role="tabpanel" aria-labelledby="tab-login" data-auth-form="login" novalidate>
             <h2>Entrar</h2>
@@ -91,6 +90,33 @@
             <button class="btn btn-primary btn-block btn-lg" type="submit">Criar conta</button>
             <p class="form-note" role="status" data-note></p>
           </form>
+
+          <form class="auth-form" data-auth-form="recover" novalidate hidden>
+            <h2>Nova senha</h2>
+            <p>Escolha a nova senha da sua conta.</p>
+            <div class="field">
+              <label for="recover-pass">Nova senha</label>
+              <div class="pw-wrap">
+                <input id="recover-pass" name="password" type="password" autocomplete="new-password" required minlength="6">
+                <button class="pw-toggle" type="button" data-pw-toggle="recover-pass" aria-label="Mostrar senha">Mostrar</button>
+              </div>
+              <span class="muted small">Mínimo de 6 caracteres.</span>
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" type="submit">Salvar nova senha</button>
+            <p class="form-note" role="status" data-note></p>
+          </form>
+
+          <section class="account-dash" data-dash hidden aria-labelledby="dash-h">
+            <h2 id="dash-h" data-dash-hello>Olá!</h2>
+            <p class="muted" data-dash-email></p>
+            <p class="form-note" role="status" data-note></p>
+            <h3>Meus pedidos</h3>
+            <div class="account-orders" data-orders aria-live="polite"><p class="muted">Carregando...</p></div>
+            <div class="account-dash-actions">
+              <a class="btn btn-primary" href="loja.html">Ver produtos</a>
+              <button class="btn btn-ghost" type="button" data-signout>Sair da conta</button>
+            </div>
+          </section>
         </div>
       </div>
     </div>

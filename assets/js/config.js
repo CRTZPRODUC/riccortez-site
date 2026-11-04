@@ -57,6 +57,11 @@ export const CONFIG = {
   CHECKOUT_API_URL: 'https://grkodpfitwkvkukcerzm.supabase.co/functions/v1/checkout',
   PAYMENT_API_URL: 'https://grkodpfitwkvkukcerzm.supabase.co/functions/v1/pagamento',
 
+  // Supabase project for customer accounts (Supabase Auth). The publishable key is public by
+  // design: row level security decides what each visitor can read.
+  SUPABASE_URL: 'https://grkodpfitwkvkukcerzm.supabase.co',
+  SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_Jz_reV79ToyruSbIZlr0NA_1JpIdZcE',
+
   // Dispatch time in business days for items kept in stock.
   DISPATCH_BUSINESS_DAYS: 2,
   // Items made on demand (to keep the quality up): the product page shows a notice and the

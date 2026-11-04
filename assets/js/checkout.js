@@ -277,4 +277,18 @@ boot().then(({ products }) => {
   byId = new Map(products.map((p) => [p.id, p]));
   render();
   cart.on(render);
+  prefillFromAccount();
 });
+
+// A signed-in customer gets name and e-mail filled in (empty fields only). The Supabase client
+// is loaded only when a stored session exists, so guests never download it.
+function prefillFromAccount() {
+  let stored = false;
+  try { stored = Object.keys(localStorage).some((k) => /^sb-.+-auth-token$/.test(k)); } catch { /* private mode */ }
+  if (!stored) return;
+  import('./auth.js').then(({ currentUser }) => currentUser()).then((user) => {
+    if (!user) return;
+    if (!form.name.value.trim() && user.user_metadata?.name) form.name.value = user.user_metadata.name;
+    if (!form.email.value.trim() && user.email) form.email.value = user.email;
+  }).catch(() => {});
+}

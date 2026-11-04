@@ -1,0 +1,115 @@
+/* Institutional pages: hero, breadcrumb, side menu and long-form content.
+   Loaded after styles.css and pages.css; reuses their tokens and the FAQ accordion rules. */
+
+/* ------------------------------------------------------------ hero */
+.info-hero {
+  background: linear-gradient(180deg, var(--bg-1), var(--bg));
+  border-bottom: 1px solid var(--line);
+  padding-block: 36px 44px;
+}
+.info-crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; list-style: none; margin: 0 0 24px; padding: 0; font-size: 13px; color: var(--ink-3); }
+.info-crumbs li + li::before { content: "\203A"; margin-right: 6px; opacity: .7; }
+.info-crumbs a:hover { color: var(--gold-text); text-decoration: underline; text-underline-offset: 3px; }
+.info-crumbs [aria-current] { color: var(--ink-2); }
+.info-hero h1 { font-size: clamp(32px, 4.6vw, 54px); line-height: 1.05; letter-spacing: -.03em; overflow-wrap: anywhere; }
+.info-hero h1 em { font-family: var(--font-script); font-style: normal; font-weight: 400; color: var(--gold-text); font-size: 1.2em; letter-spacing: 0; }
+.info-lead { color: var(--ink-2); font-size: clamp(16px, 1.6vw, 19px); max-width: 58ch; margin: 16px 0 0; }
+
+/* ------------------------------------------------------------ layout */
+.info-wrap { padding-block: 48px 96px; }
+.info-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 64px; align-items: start; }
+
+/* Side menu (sticky on desktop, chip row on mobile) */
+.info-nav { position: sticky; top: calc(var(--header-h) + 24px); }
+.info-nav-title { font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--gold-text); margin: 0 0 12px; }
+.info-nav ul { display: grid; gap: 2px; border-left: 1px solid var(--line); }
+.info-nav a {
+  display: block; padding: 9px 16px; margin-left: -1px; border-left: 2px solid transparent;
+  color: var(--ink-2); font-size: 14.5px; font-weight: 500; line-height: 1.4;
+  transition: color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+.info-nav a:hover { color: var(--ink); background: var(--bg-2); }
+.info-nav a[aria-current="page"] { color: var(--gold-text); border-left-color: var(--gold); background: var(--gold-soft); font-weight: 700; }
+
+/* ------------------------------------------------------------ content */
+.info-content { max-width: 72ch; min-width: 0; }
+.info-content h2 { font-size: clamp(22px, 2.4vw, 28px); line-height: 1.2; margin: 48px 0 14px; scroll-margin-top: calc(var(--header-h) + 16px); }
+.info-content > :first-child { margin-top: 0; }
+.info-content h2:first-child { margin-top: 0; }
+.info-content h3 { font-size: 18px; line-height: 1.3; letter-spacing: -.01em; margin: 28px 0 8px; }
+.info-content p, .info-content li { color: var(--ink-2); }
+.info-content strong { color: var(--ink); font-weight: 700; }
+.info-content ul, .info-content ol { padding-left: 1.3em; margin: 0 0 1.2em; }
+.info-content ul { list-style: disc; }
+.info-content ol { list-style: decimal; }
+.info-content li { margin-bottom: .5em; padding-left: .2em; }
+.info-content li::marker { color: var(--gold-text); }
+.info-content a:not(.btn) { color: var(--gold-text); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; overflow-wrap: anywhere; }
+.info-content a:not(.btn):hover { text-decoration-thickness: 2px; }
+.info-content code { font: 600 .9em ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 1px 6px; color: var(--ink); }
+.info-updated { color: var(--ink-3); font-size: 13px; margin: 0 0 24px; }
+.info-intro { font-size: 17px; margin-bottom: 8px; }
+.info-company { font-weight: 700; color: var(--ink); letter-spacing: .01em; }
+.info-links { list-style: none !important; padding-left: 0 !important; }
+.info-links li { padding: 12px 0; margin: 0; border-bottom: 1px solid var(--line); }
+.info-links li:first-child { border-top: 1px solid var(--line); }
+
+/* Numbered steps */
+.info-steps { list-style: none !important; padding-left: 0 !important; counter-reset: step; }
+.info-steps li { counter-increment: step; position: relative; padding: 0 0 0 48px; margin-bottom: 20px; min-height: 32px; }
+.info-steps li::before {
+  content: counter(step); position: absolute; left: 0; top: -2px; width: 32px; height: 32px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--gold); color: #0a0a0a; font-weight: 800; font-size: 14px;
+}
+
+/* Contact cards */
+.info-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.info-content a.info-card, .info-card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 22px; min-width: 0;
+  background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  color: var(--ink); text-decoration: none;
+  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.info-content a.info-card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: var(--shadow); text-decoration: none; }
+.info-card-ico { display: grid; place-items: center; width: 44px; height: 44px; margin-bottom: 10px; border-radius: 50%; background: var(--gold-soft); color: var(--gold-text); }
+.info-card-label { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+.info-card-value { font-size: 19px; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.info-card-note { font-size: 13.5px; color: var(--ink-2); }
+.info-card-static { grid-column: 1 / -1; }
+.info-hours { margin: 6px 0 0; width: 100%; display: grid; gap: 0; }
+.info-hours div { display: flex; justify-content: space-between; gap: 16px; padding: 10px 0; border-top: 1px solid var(--line); }
+.info-hours div:first-child { border-top: 0; }
+.info-hours dt { color: var(--ink-2); }
+.info-hours dd { margin: 0; font-weight: 700; color: var(--ink); text-align: right; }
+
+/* FAQ accordion (rules come from pages.css) */
+.info-content .faq-list { margin-bottom: 8px; }
+.info-content .faq-q { font-size: 16.5px; }
+.info-content .faq-a p { padding-right: 8px; }
+/* Keep links inside collapsed answers out of the tab order. */
+.info-content .faq-q[aria-expanded="false"] + .faq-a { visibility: hidden; transition: grid-template-rows 250ms var(--ease), visibility 0s 250ms; }
+
+/* ------------------------------------------------------------ responsive */
+@media (max-width: 960px) {
+  .info-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .info-nav { position: static; }
+  .info-nav-title { display: none; }
+  .info-nav ul {
+    display: flex; gap: 8px; border-left: 0; overflow-x: auto; scroll-snap-type: x proximity;
+    margin-inline: calc(var(--gutter) * -1); padding: 2px var(--gutter) 10px; scrollbar-width: thin;
+  }
+  .info-nav li { flex: none; scroll-snap-align: start; }
+  .info-nav a {
+    margin: 0; padding: 9px 16px; border: 1px solid var(--line-2); border-radius: 999px;
+    white-space: nowrap; font-size: 14px; background: var(--bg-1);
+  }
+  .info-nav a[aria-current="page"] { background: var(--gold); border-color: var(--gold); color: #0a0a0a; }
+  .info-wrap { padding-block: 28px 64px; }
+}
+@media (max-width: 600px) {
+  .info-hero { padding-block: 24px 28px; }
+  .info-crumbs ol { margin-bottom: 16px; }
+  .info-cards { grid-template-columns: minmax(0, 1fr); }
+  .info-card-static { grid-column: auto; }
+  .info-content h2 { margin-top: 36px; }
+}

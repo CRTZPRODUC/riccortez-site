@@ -1,0 +1,78 @@
+/* Checkout (checkout.html) and order status (pedido.html). Uses .field and .sum-row from the
+   shared styles. */
+
+.co-wrap { padding-top: 32px; padding-bottom: 72px; }
+.co-title { font-size: clamp(26px, 4vw, 36px); font-weight: 800; margin: 0 0 24px; }
+.co-empty { display: grid; gap: 16px; justify-items: start; }
+
+.co-grid { display: grid; gap: 24px; align-items: start; }
+@media (min-width: 960px) { .co-grid { grid-template-columns: minmax(0, 1fr) 380px; } }
+.co-main { display: grid; gap: 24px; min-width: 0; }
+
+.co-box { background: var(--bg-1); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 24px; }
+.co-box h2 { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; margin: 0 0 20px; }
+.co-box h2 span {
+  display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+  background: var(--gold); color: #0a0a0a; font-size: 14px;
+}
+.co-box .field input { width: 100%; }
+.field label small { font-weight: 400; color: var(--ink-3); }
+.field.invalid input { border-color: var(--red); }
+
+.co-row { display: grid; gap: 0 16px; }
+@media (min-width: 600px) {
+  .co-row { grid-template-columns: 1fr 1fr; }
+  .co-row-cep { grid-template-columns: 200px 1fr; align-items: center; }
+  .co-row-street { grid-template-columns: 1fr 140px; }
+  .co-row-city { grid-template-columns: 1fr 1fr 90px; }
+}
+.co-hint { margin: 0 0 16px; font-size: 13px; color: var(--ink-3); }
+
+.co-ship { display: grid; gap: 10px; margin-bottom: 12px; }
+.co-ship-opt {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
+  padding: 14px 16px; border: 1px solid var(--line-2); border-radius: var(--radius); cursor: pointer;
+  transition: border-color var(--dur) var(--ease);
+}
+.co-ship-opt:hover { border-color: var(--ink-3); }
+.co-ship-opt:has(input:checked) { border-color: var(--gold); background: var(--gold-soft); }
+.co-ship-opt input { accent-color: var(--gold); width: 18px; height: 18px; }
+.co-ship-name { display: grid; gap: 2px; }
+.co-ship-name small, .co-line-name small { color: var(--ink-3); font-size: 12.5px; }
+.co-ship-opt s { color: var(--ink-3); font-weight: 400; margin-right: 4px; }
+.co-ship-opt .ship-free { color: var(--green); }
+.co-box .ship-note { color: var(--ink-3); line-height: 1.5; }
+
+.co-summary { display: grid; gap: 12px; }
+@media (min-width: 960px) { .co-summary { position: sticky; top: 96px; } }
+.co-summary h2 { margin-bottom: 4px; }
+.co-lines { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 12px; }
+.co-lines li { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; font-size: 14px; }
+.co-lines img { width: 56px; height: 56px; object-fit: cover; border-radius: var(--radius); background: var(--bg-2); }
+.co-line-name { display: grid; gap: 2px; }
+.co-summary .sum-row { font-size: 15px; }
+.co-summary .sum-row strong { font-size: 16px; font-weight: 700; }
+.co-total { border-top: 1px solid var(--line); padding-top: 12px; }
+.co-summary .co-total strong, .co-done .co-total strong { font-size: 24px; font-weight: 800; }
+.co-inst { font-size: 13.5px; line-height: 1.5; margin: 0; }
+.co-error { color: var(--red); font-size: 14px; margin: 0; }
+.co-error:empty { display: none; }
+.co-safe { margin: 0; text-align: center; }
+
+.co-done { max-width: 720px; display: grid; gap: 20px; }
+.co-status .co-title { margin-bottom: 8px; }
+.co-status.co-ok .co-title { color: var(--green); }
+.co-status.co-bad .co-title { color: var(--red); }
+.co-code { font-size: 16px; margin: 0 0 8px; }
+.co-order-items { margin: 0 0 12px; padding-left: 18px; display: grid; gap: 6px; }
+.co-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.co-summary .co-pix strong { color: var(--gold-text); }
+
+@media (max-width: 599px) {
+  .co-wrap { padding-top: 20px; padding-bottom: 48px; }
+  .co-title { margin-bottom: 16px; }
+  .co-grid, .co-main { gap: 16px; }
+  .co-box { padding: 18px 16px; }
+  .co-ship-opt { padding: 12px; gap: 10px; }
+  .co-actions .btn { flex: 1 1 100%; }
+}

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minha conta · Ric Cortez Pickups</title>
+  <meta name="description" content="Entre ou crie sua conta na loja Ric Cortez Pickups.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-style='italic' font-size='20' text-anchor='middle' fill='%23d4a437'%3ER%3C/text%3E%3C/svg%3E">
+  <script>try{var t=localStorage.getItem('rc-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <script type="module" src="assets/js/account.js"></script>
+</head>
+<body>
+  <div data-header></div>
+
+  <main id="main" tabindex="-1" class="account">
+    <div class="container">
+      <div class="account-grid">
+        <div class="account-aside">
+          <div>
+            <span class="eyebrow">Minha conta</span>
+            <h1>Seu som, seus <em>pedidos</em>.</h1>
+            <p>Com a conta você acompanha pedidos, salva endereços e compra mais rápido.</p>
+          </div>
+          <ul class="features-list">
+            <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Acompanhe seus pedidos</li>
+            <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Endereços salvos</li>
+            <li><svg class="ico" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg> Checkout mais rápido</li>
+          </ul>
+        </div>
+
+        <div class="account-main">
+          <div class="auth-tabs" role="tablist" aria-label="Acesso à conta">
+            <button class="auth-tab" type="button" role="tab" id="tab-login" aria-controls="panel-login" aria-selected="true" data-auth-tab="login">Entrar</button>
+            <button class="auth-tab" type="button" role="tab" id="tab-signup" aria-controls="panel-signup" aria-selected="false" data-auth-tab="signup">Criar conta</button>
+          </div>
+
+          <!--
+            Supabase Auth plugs in here.
+            Next phase: replace the submit handlers in assets/js/account.js with
+            supabase.auth.signInWithPassword / signUp / resetPasswordForEmail.
+            Until then these forms never send data anywhere.
+          -->
+          <form class="auth-form" id="panel-login" role="tabpanel" aria-labelledby="tab-login" data-auth-form="login" novalidate>
+            <h2>Entrar</h2>
+            <p>Use o e-mail e a senha da sua conta.</p>
+            <div class="field">
+              <label for="login-email">E-mail</label>
+              <input id="login-email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com">
+            </div>
+            <div class="field">
+              <label for="login-pass">Senha</label>
+              <div class="pw-wrap">
+                <input id="login-pass" name="password" type="password" autocomplete="current-password" required minlength="6">
+                <button class="pw-toggle" type="button" data-pw-toggle="login-pass" aria-label="Mostrar senha">Mostrar</button>
+              </div>
+            </div>
+            <div class="form-row">
+              <span></span>
+              <a href="#" data-forgot>Esqueci minha senha</a>
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" type="submit">Entrar</button>
+            <p class="form-note" role="status" data-note></p>
+          </form>
+
+          <form class="auth-form" id="panel-signup" role="tabpanel" aria-labelledby="tab-signup" data-auth-form="signup" novalidate hidden>
+            <h2>Criar conta</h2>
+            <p>Leva menos de um minuto.</p>
+            <div class="field">
+              <label for="signup-name">Nome</label>
+              <input id="signup-name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="signup-email">E-mail</label>
+              <input id="signup-email" name="email" type="email" autocomplete="email" required placeholder="voce@email.com">
+            </div>
+            <div class="field">
+              <label for="signup-pass">Senha</label>
+              <div class="pw-wrap">
+                <input id="signup-pass" name="password" type="password" autocomplete="new-password" required minlength="6" aria-describedby="pw-hint">
+                <button class="pw-toggle" type="button" data-pw-toggle="signup-pass" aria-label="Mostrar senha">Mostrar</button>
+              </div>
+              <span class="muted small" id="pw-hint">Mínimo de 6 caracteres.</span>
+            </div>
+            <button class="btn btn-primary btn-block btn-lg" type="submit">Criar conta</button>
+            <p class="form-note" role="status" data-note></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div data-footer></div>
+</body>
+</html>

@@ -1,0 +1,871 @@
+{
+  "source": "Snapshot da WooCommerce Store API de riccortez.com (2026-10-29). Usado como fallback quando a API ao vivo não responde.",
+  "categories": [
+    {
+      "slug": "captadores",
+      "name": "Captadores",
+      "icon": "guitar",
+      "blurb": "Captação piezo e de contato, 100% blindada"
+    },
+    {
+      "slug": "interfaces",
+      "name": "Interfaces",
+      "icon": "interface",
+      "blurb": "Grave e faça lives direto do celular"
+    },
+    {
+      "slug": "microfones",
+      "name": "Microfones",
+      "icon": "mic",
+      "blurb": "Condensadores e lapelas para voz e vídeo"
+    },
+    {
+      "slug": "kits",
+      "name": "Kits Gold Pro",
+      "icon": "kit",
+      "blurb": "Combos montados pela equipe Gold Pro"
+    },
+    {
+      "slug": "acessorios",
+      "name": "Acessórios",
+      "icon": "cable",
+      "blurb": "Cabos, adaptadores e suportes"
+    }
+  ],
+  "products": [
+    {
+      "id": 3152,
+      "name": "RT7 Rastilho Gold Pro p/ Violão 7 Cordas – Externo P2",
+      "slug": "rt7-rastilho-gold-pro-p-violao-7-cordas-externo-p2",
+      "cat": "captadores",
+      "price": 760,
+      "regular": 760,
+      "stock": true,
+      "isNew": true,
+      "img": "assets/img/wp/2024-06-fotos-mercado-livre-e-site-11.webp",
+      "imgs": [],
+      "desc": "Captador piezo de rastilho externo Gold Pro RT7 para violão de 7 cordas, 100% blindado contra ruído de terra, com saída P2.\nFoi pensado para reproduzir o timbre do violão de 7 cordas com fidelidade. Funciona com cordas de nylon ou aço, sem precisar de pré-amplificador equalizador: é só plugar e tocar. Pode ser ligado a qualquer pedal, pedaleira ou preamp ativo.\nÉ 100% blindado contra ruído de terra e interferências, para um som puro e cristalino.\nAcompanha: captador RT7 e cabo P2-P10 de 4 metros.\nEspecificações: captador de rastilho passivo, montagem externa, 7 cordas, posições de instalação no osso do rastilho, abaixo das cordas ou no trasto, saída P2, cabo de 4 m."
+    },
+    {
+      "id": 3074,
+      "name": "RT7 Rastilho Gold Pro p/ Violão 7 Cordas – Interno P10",
+      "slug": "rt7-rastilho-gold-pro-p-violao-7-cordas-interno-p10",
+      "cat": "captadores",
+      "price": 760,
+      "regular": 760,
+      "stock": true,
+      "isNew": true,
+      "img": "assets/img/wp/2023-11-fotos-mercado-livre-e-site-2.webp",
+      "imgs": [],
+      "desc": "Piezo rastilho para violão 7 cordas, instalação interna com saída P10. 100% blindado anti ruído terra, para cordas nylon ou aço."
+    },
+    {
+      "id": 3068,
+      "name": "RT6 Gold Pro p/ Violão 6 Cordas – Interno P10",
+      "slug": "rt6-gold-pro-p-violao-6-cordas-interno-p10",
+      "cat": "captadores",
+      "price": 680,
+      "regular": 680,
+      "stock": true,
+      "isNew": true,
+      "img": "assets/img/wp/2023-11-gold-pro-recomenda-5.webp",
+      "imgs": [],
+      "desc": "Piezo rastilho para violão 6 cordas, instalação interna com saída P10. 100% blindado anti ruído terra, para cordas nylon ou aço."
+    },
+    {
+      "id": 3064,
+      "name": "RT6 Gold Pro p/ Violão 6 Cordas – Externo P2",
+      "slug": "rt6-gold-pro-p-violao-6-cordas-externo-p2",
+      "cat": "captadores",
+      "price": 680,
+      "regular": 680,
+      "stock": true,
+      "img": "assets/img/wp/2023-11-gold-pro-recomenda-4.webp",
+      "imgs": [],
+      "desc": "Captador piezo de rastilho externo Gold Pro RT6 para violão de 6 cordas, com saída P2, sem furar o instrumento e 100% blindado contra ruído de terra.\nFoi pensado para reproduzir o timbre do violão com fidelidade. Funciona com cordas de nylon ou aço, sem precisar de pré-amplificador equalizador: é só plugar e tocar. Pode ser ligado a qualquer pedal, pedaleira ou preamp ativo.\nÉ 100% blindado contra ruído de terra e interferências, para um som puro e cristalino.\nAcompanha: captador RT6 e cabo de 4 metros.\nEspecificações: captador de rastilho passivo, montagem externa, 6 cordas, posições de instalação no osso do rastilho, abaixo das cordas ou no trasto, saída P2, cabo de 4 m."
+    },
+    {
+      "id": 3061,
+      "name": "RT6 Gold Pro p/ Violão 6 Cordas",
+      "slug": "rt6-gold-pro-p-violao-6-cordas",
+      "cat": "captadores",
+      "price": 680,
+      "regular": 680,
+      "stock": true,
+      "img": "assets/img/wp/2023-11-gold-pro-recomenda-2.webp",
+      "imgs": [],
+      "desc": "Piezo rastilho Gold Pro para violão 6 cordas. Funciona sem preamp e aceita qualquer pedal, pedaleira ou preamp ativo."
+    },
+    {
+      "id": 1476,
+      "name": "Gold Extreme Bass – Duplo",
+      "slug": "gold-extreme-bass-duplo",
+      "cat": "captadores",
+      "price": 768,
+      "regular": 768,
+      "stock": true,
+      "featured": true,
+      "img": "assets/img/wp/2020-05-editar-2-copiar.webp",
+      "imgs": [],
+      "desc": "Gold Extreme Bass Duplo: captação de contato passiva e potente, com dois sensores, para violão, bandolim, cello e outros instrumentos acústicos.\nO sistema duplo captura duas regiões do instrumento ao mesmo tempo, como o tampo e o cavalete, ou áreas de maior ressonância e ataque. Os sensores têm diâmetros diferentes, para os lados grave e agudo do tampo, e o resultado é um som com graves encorpados, médios definidos e agudos suaves.\nPor ser passivo, dispensa bateria de 9V e pode ser ligado diretamente a um amplificador ou pré-amplificador externo (preamp), mantendo resposta dinâmica e volume consistentes. O som é natural, sem metalização, ruídos ou coloração artificial.\nO posicionamento dos sensores é livre: dá para destacar o corpo e a ressonância de um violão ou o ataque das notas de um contrabaixo acústico. Serve para estúdio e para apresentações ao vivo, em instrumentos de corda, percussão e sopro.\nEspecificações: captador de contato piezoelétrico passivo, dois sensores, sem bateria, instalação no tampo, na lateral ou onde preferir."
+    },
+    {
+      "id": 1470,
+      "name": "Gold Extreme Bass – Individual",
+      "slug": "gold-extreme-bass-individual",
+      "cat": "captadores",
+      "price": 499,
+      "regular": 499,
+      "stock": true,
+      "img": "assets/img/wp/2020-05-goldpro-1-ex.webp",
+      "imgs": [],
+      "desc": "Gold Extreme Bass Individual: captador de contato passivo com graves encorpados, sem bateria, para violão, bandolim, cello, banjo e outros instrumentos acústicos.\nO sistema de captação de contato individual entrega uma resposta encorpada, com graves profundos e bem definidos e médios e agudos claros. O som é puro, sem metalização, coloração artificial ou distorção.\nPor ser passivo, dispensa bateria de 9V e pode ser ligado diretamente a amplificadores, mesas de som ou pré-amplificadores externos (preamp), para mais controle tonal e ganho.\nEspecificações: captador de contato piezoelétrico passivo, sem bateria, instalação no tampo, na lateral ou onde preferir."
+    },
+    {
+      "id": 1591,
+      "name": "Gold Pro 1",
+      "slug": "gold-pro-1",
+      "cat": "captadores",
+      "price": 480,
+      "regular": 480,
+      "stock": true,
+      "img": "assets/img/wp/2020-05-gold-pro-1-e1591999467120.webp",
+      "imgs": [],
+      "desc": "O captador que deu origem à linha Gold Pro. Captação de contato para instrumentos de corda, percussão e sopro."
+    },
+    {
+      "id": 1518,
+      "name": "Jackcap 3 UP",
+      "slug": "jackcap-3-up",
+      "cat": "captadores",
+      "price": 319,
+      "regular": 319,
+      "stock": true,
+      "img": "assets/img/ml/4334358142-1.webp",
+      "imgs": ["assets/img/ml/4334358142-2.webp", "assets/img/ml/4334358142-3.webp", "assets/img/ml/4334358142-4.webp", "assets/img/ml/4334358142-5.webp"],
+      "desc": "Captador Jackcap 3 Up, com controles de volume e tone e alta impedância, para uso externo em violino, violão e cavaquinho.\nO Jackcap 3 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nA entrada é P10: use um cabo, adaptador ou transmissor sem fio com plugue P10. O timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 3 Up, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controles de volume e tone, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 1515,
+      "name": "Jackcap 2 UP",
+      "slug": "jackcap-2-up",
+      "cat": "captadores",
+      "price": 258,
+      "regular": 258,
+      "stock": true,
+      "img": "assets/img/wp/2020-05-mg-6387-removebg-preview.webp",
+      "imgs": [],
+      "desc": "Captador Jackcap 2 Up, com botão de volume e alta impedância, para uso externo em violão, violino, viola e cavaquinho.\nO Jackcap 2 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nA entrada é P10: use um cabo, adaptador ou transmissor sem fio com plugue P10. O timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 2 Up, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controle de volume, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 1466,
+      "name": "Jackcap 1 UP",
+      "slug": "jackcap-1-up",
+      "cat": "captadores",
+      "price": 189,
+      "regular": 189,
+      "stock": true,
+      "featured": true,
+      "img": "assets/img/ml/3561511421-1.webp",
+      "imgs": ["assets/img/ml/3561511421-2.webp", "assets/img/ml/3561511421-3.webp", "assets/img/ml/3561511421-4.webp"],
+      "desc": "Captador de contato Jackcap 1 Up, passivo, de alta impedância e uso externo, para violão, violino, cello, bandolim, banjo, cavaquinho e harpa.\nO Jackcap 1 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nA entrada é P10: use um cabo, adaptador ou transmissor sem fio com plugue P10. O timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 1 Up, estojo zipado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, montagem externa, 10 cordas compatíveis, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 2062854331,
+      "name": "Jackcap 1 UP com Cabo P10",
+      "slug": "jackcap-1-up-com-cabo-p10",
+      "cat": "captadores",
+      "price": 243.3,
+      "regular": 243.3,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/2062854331-1.webp",
+      "imgs": [
+        "assets/img/ml/2062854331-2.webp",
+        "assets/img/ml/2062854331-3.webp",
+        "assets/img/ml/2062854331-4.webp",
+        "assets/img/ml/2062854331-5.webp"
+      ],
+      "desc": "Kit com o captador de contato Jackcap 1 Up e cabo P10-P10 fino de 5 metros, para captar violão, violino, viola, cavaquinho e outros instrumentos de corda.\nO Jackcap 1 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 1 Up, cabo P10-P10 fino de 5 m, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, montagem externa com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 1988218707,
+      "name": "Jackcap 2 UP com Cabo P10",
+      "slug": "jackcap-2-up-com-cabo-p10",
+      "cat": "captadores",
+      "price": 298.46,
+      "regular": 298.46,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/1988218707-1.webp",
+      "imgs": [
+        "assets/img/ml/1988218707-2.webp",
+        "assets/img/ml/1988218707-3.webp",
+        "assets/img/ml/1988218707-4.webp"
+      ],
+      "desc": "Kit com o captador Jackcap 2 Up (com botão de volume) e cabo P10-P10 de 5 metros, para violão, violino, viola e cavaquinho.\nO Jackcap 2 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 2 Up, cabo P10-P10 de 5 m, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controle de volume, montagem externa com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 2117640888,
+      "name": "Jackcap 3 UP com Cabo P10",
+      "slug": "jackcap-3-up-com-cabo-p10",
+      "cat": "captadores",
+      "price": 349.68,
+      "regular": 349.68,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/2117640888-1.webp",
+      "imgs": [
+        "assets/img/ml/2117640888-2.webp",
+        "assets/img/ml/2117640888-3.webp",
+        "assets/img/ml/2117640888-4.webp",
+        "assets/img/ml/2117640888-5.webp"
+      ],
+      "desc": "Kit com o captador Jackcap 3 Up (com controles de volume e tone) e cabo P10 de 5 metros, para violino, violão e cavaquinho.\nO Jackcap 3 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 3 Up, cabo P10 de 5 m, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controles de volume e tone, montagem externa com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 3684126407,
+      "name": "Jackcap 2 UP com Suporte de Queixeira",
+      "slug": "jackcap-2-up-com-suporte-de-queixeira",
+      "cat": "captadores",
+      "price": 295.0,
+      "regular": 295.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/3684126407-1.webp",
+      "imgs": [
+        "assets/img/ml/3684126407-2.webp",
+        "assets/img/ml/3684126407-3.webp",
+        "assets/img/ml/3684126407-4.webp"
+      ],
+      "desc": "Captador Jackcap 2 Up (com botão de volume) com suporte de queixeira já instalado, indicado para violino.\nO suporte de queixeira já vem instalado no captador. O Jackcap 2 Up é passivo e plug-and-play: basta conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nA entrada é P10: use um cabo, adaptador ou transmissor sem fio com plugue P10. O cabo não está incluso neste kit.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 2 Up com suporte de queixeira instalado, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controle de volume, montagem com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 4537955862,
+      "name": "Jackcap 3 UP com Suporte de Queixeira",
+      "slug": "jackcap-3-up-com-suporte-de-queixeira",
+      "cat": "captadores",
+      "price": 355.0,
+      "regular": 355.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/4537955862-1.webp",
+      "imgs": [
+        "assets/img/ml/4537955862-2.webp",
+        "assets/img/ml/4537955862-3.webp"
+      ],
+      "desc": "Captador Jackcap 3 Up (com controles de volume e tone) com suporte de queixeira já instalado, indicado para violino.\nO suporte de queixeira já vem instalado no captador. O Jackcap 3 Up é passivo e plug-and-play: basta conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nA entrada é P10: use um cabo, adaptador ou transmissor sem fio com plugue P10. O cabo não está incluso neste kit.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 3 Up com suporte de queixeira instalado, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controles de volume e tone, montagem com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 5203061034,
+      "name": "Jackcap 2 UP com Suporte de Queixeira e Cabo P10",
+      "slug": "jackcap-2-up-com-suporte-de-queixeira-e-cabo-p10",
+      "cat": "captadores",
+      "price": 332.93,
+      "regular": 332.93,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/5203061034-1.webp",
+      "imgs": [
+        "assets/img/ml/5203061034-2.webp",
+        "assets/img/ml/5203061034-3.webp",
+        "assets/img/ml/5203061034-4.webp",
+        "assets/img/ml/5203061034-5.webp",
+        "assets/img/ml/5203061034-6.webp"
+      ],
+      "desc": "Kit com o captador Jackcap 2 Up (com botão de volume), suporte de queixeira já instalado e cabo P10 blindado de 5 metros, indicado para violino.\nO suporte de queixeira já vem instalado no captador. O Jackcap 2 Up é passivo e plug-and-play: basta conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 2 Up com suporte de queixeira instalado, cabo P10 blindado de 5 m, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controle de volume, montagem com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 5314300554,
+      "name": "Jackcap 3 UP com Suporte de Queixeira e Cabo P10",
+      "slug": "jackcap-3-up-com-suporte-de-queixeira-e-cabo-p10",
+      "cat": "captadores",
+      "price": 399.9,
+      "regular": 399.9,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/5314300554-1.webp",
+      "imgs": [
+        "assets/img/ml/5314300554-2.webp",
+        "assets/img/ml/5314300554-3.webp",
+        "assets/img/ml/5314300554-4.webp"
+      ],
+      "desc": "Kit com o captador Jackcap 3 Up (com controles de volume e tone), suporte de queixeira já instalado e cabo P10 de 5 metros, indicado para violino e viola.\nO suporte de queixeira já vem instalado no captador. O Jackcap 3 Up é passivo e plug-and-play: basta conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 3 Up com suporte de queixeira instalado, cabo P10 de 5 m, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controles de volume e tone, montagem com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 4298428805,
+      "name": "Jackcap 2 UP com Suporte de Queixeira e Transmissor",
+      "slug": "jackcap-2-up-com-suporte-de-queixeira-e-transmissor",
+      "cat": "captadores",
+      "price": 418.62,
+      "regular": 418.62,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/4298428805-1.webp",
+      "imgs": [
+        "assets/img/ml/4298428805-2.webp",
+        "assets/img/ml/4298428805-3.webp",
+        "assets/img/ml/4298428805-4.webp",
+        "assets/img/ml/4298428805-5.webp",
+        "assets/img/ml/4298428805-6.webp"
+      ],
+      "desc": "Kit com o captador Jackcap 2 Up (com botão de volume), suporte de queixeira já instalado e transmissor sem fio, indicado para violino.\nO suporte de queixeira já vem instalado no captador. Além do captador, o kit inclui um transmissor sem fio, compatível com a saída P10 do Jackcap.\nO Jackcap 2 Up é passivo e plug-and-play: basta conectá-lo por P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 2 Up com suporte de queixeira instalado, transmissor sem fio, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controle de volume, montagem com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 5943938778,
+      "name": "Jackcap 3 UP com Transmissor",
+      "slug": "jackcap-3-up-com-transmissor",
+      "cat": "captadores",
+      "price": 442.26,
+      "regular": 442.26,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/5943938778-1.webp",
+      "imgs": [
+        "assets/img/ml/5943938778-2.webp"
+      ],
+      "desc": "Kit com o captador Jackcap 3 Up (com controles de volume e tone) e transmissor sem fio, para violino, violão e cavaquinho.\nAlém do captador, o kit inclui um transmissor sem fio, compatível com a saída P10 do Jackcap.\nO Jackcap 3 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectá-lo por P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nAcompanha: captador Jackcap 3 Up, transmissor sem fio, estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador de contato piezoelétrico passivo, alta impedância, controles de volume e tone, montagem com massinha adesiva reutilizável, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 4120963455,
+      "name": "Kit 5 Captadores Jackcap 1 UP",
+      "slug": "kit-5-captadores-jackcap-1-up",
+      "cat": "captadores",
+      "price": 849.0,
+      "regular": 849.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/4120963455-1.webp",
+      "imgs": [
+        "assets/img/ml/4120963455-2.webp",
+        "assets/img/ml/4120963455-3.webp"
+      ],
+      "desc": "Kit com 5 captadores de contato Jackcap 1 Up, para quem precisa captar vários violões, violinos, cavaquinhos, bandolins, banjos e outros instrumentos de corda.\nO Jackcap 1 Up é passivo e plug-and-play: basta fixar sobre o tampo do instrumento e conectar um cabo P10. Não precisa de bateria, alimentação externa ou phantom power.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. Como o captador pode ser colocado em diferentes posições do instrumento, é possível obter timbres diferentes.\nO timbre captado é natural e potente, e o captador funciona em instrumentos de corda e em alguns instrumentos de percussão e sopro.\nOs itens que acompanham o Jackcap 1 Up são: estojo zipado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: 5 captadores de contato piezoelétricos passivos, modelo Jackcap 1 Up, montagem externa, saída P10, compatível com bandolim, cavaquinho, cello, harpa, violão, violino e banjo.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 5114095630,
+      "name": "Jackcap 1 EX",
+      "slug": "jackcap-1-ex",
+      "cat": "captadores",
+      "price": 245.26,
+      "regular": 245.26,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/5114095630-1.webp",
+      "imgs": [
+        "assets/img/ml/5114095630-2.webp",
+        "assets/img/ml/5114095630-3.webp",
+        "assets/img/ml/5114095630-4.webp"
+      ],
+      "desc": "Captador ultrafino Jackcap 1 EX, piezo passivo para ukulele, cavaquinho, violão, violino, bandolim, banjo, cello e outros instrumentos de corda.\nBasta fixar o captador no instrumento e conectar um cabo P10: ele funciona sem bateria, alimentação externa ou phantom power.\nPor ser ultrafino, o Jackcap 1 EX pode ser colocado em posições que outros captadores não permitem, como abaixo das cordas de um ukulele, cavaquinho ou violão, além das posições externa, interna e lateral.\nÉ excelente em instrumentos acústicos, com agudos sem excesso e graves com mais peso, e não causa microfonia.\nA fixação é feita com massinha adesiva reutilizável, para uso provisório, ou com fita dupla face, para fixação permanente. A mudança de posição altera o timbre.\nA entrada é P10: use um cabo, adaptador ou transmissor sem fio com plugue P10.\nAcompanha: estojo personalizado, manual de instruções, prende-fio para organizar o cabo, tira de fita dupla face e massinha adesiva reutilizável.\nEspecificações: captador piezo passivo, montagem interna e externa, 6 cordas compatíveis, saída P10.\nGarantia: 1 ano. Em caso de problema, o produto passa por manutenção ou troca."
+    },
+    {
+      "id": 1919,
+      "name": "IS7 Extreme Active – Interface de Áudio",
+      "slug": "is7-extreme-active-interface-de-audio",
+      "cat": "interfaces",
+      "price": 339,
+      "regular": 470,
+      "stock": true,
+      "img": "assets/img/wp/2021-01-img-6988-removebg-preview.webp",
+      "imgs": [
+        "assets/img/wp/2021-01-img-6987-removebg-preview.webp",
+        "assets/img/wp/2021-01-img-6992-removebg-preview.webp"
+      ],
+      "desc": "Interface ativa para lives e gravações no celular, com ganho dedicado para instrumento e microfone."
+    },
+    {
+      "id": 2410,
+      "name": "Flanger FC 21 – Interface de Áudio",
+      "slug": "flanger-fc-21-interface-de-audio",
+      "cat": "interfaces",
+      "price": 72,
+      "regular": 72,
+      "stock": true,
+      "featured": true,
+      "img": "assets/img/wp/2021-09-adaptador-de-conversor-de-fc-21-flanger-para-iphone-e-telefone-celular-android-para-guitarra-baixo.webp",
+      "imgs": [
+        "assets/img/wp/2021-09-1a829c8b2885e1c052104394b1887c1d.webp",
+        "assets/img/wp/2021-09-51cicuovl-ac-sy450.webp"
+      ],
+      "desc": "Compacta e fácil de levar. Entrada 6,35 mm para guitarra, baixo, teclado, microfone ou mixer; saída 6,35 mm para amplificador; fone 3,5 mm e plugue 3,5 mm para smartphone."
+    },
+    {
+      "id": 2296,
+      "name": "Saramonic SmartRig2",
+      "slug": "saramonic-smartrig2",
+      "cat": "interfaces",
+      "price": 425,
+      "regular": 599,
+      "stock": true,
+      "img": "assets/img/wp/2021-09-images-2.webp",
+      "imgs": [
+        "assets/img/wp/2021-09-5fd3ba33b48c6-g.webp",
+        "assets/img/wp/2021-09-5fd3ba3169b9c-g.webp"
+      ],
+      "desc": "Pré-amplificador portátil para iPhone, iPad, Mac e Android, com entrada combo 1/4\" e XLR para microfone ou instrumento e saída de fone 1/8\"."
+    },
+    {
+      "id": 2061,
+      "name": "Power Condenser PW1 – Interface de Áudio (Ganhe 1 Mic Lapela)",
+      "slug": "power-condenser-pw1-interface-de-audio-ganhe-1-mic-lapela",
+      "cat": "interfaces",
+      "price": 270,
+      "regular": 270,
+      "stock": true,
+      "img": "assets/img/wp/2021-03-1616995662211.webp",
+      "imgs": [
+        "assets/img/wp/2021-03-1616995913457.webp"
+      ],
+      "desc": "Use microfones condensador e lapela direto no celular, sem phantom power. 1 entrada P2 e 1 saída P2 para fone. Ganhe um microfone de lapela."
+    },
+    {
+      "id": 1951,
+      "name": "ST2-V – Interface de Áudio",
+      "slug": "st2-v",
+      "cat": "interfaces",
+      "price": 299,
+      "regular": 299,
+      "stock": true,
+      "img": "assets/img/wp/2021-01-img-6576-e1611530127262-removebg-preview-1.webp",
+      "imgs": [],
+      "desc": "Interface de áudio Gold Pro ST2/V com controle de volume dedicado, 2 entradas e resolução de 24 bit / 192 kHz, para lives e gravações.\nCom 2 entradas, a ST2/V permite gravar vários sons ao mesmo tempo, como microfones e instrumentos, e tem 1 saída para conectar ao computador. A resolução de 24 bit e a taxa de amostragem de 192 kHz preservam o detalhe de cada voz e de cada instrumento.\nÉ uma interface de 2ª geração e não tem alimentação fantasma.\nEspecificações: 2 entradas, 1 saída, conexões P10, P2 e P3, 24 bit, 192 kHz, alimentação por corrente elétrica, sem phantom power, compatível com Android e iOS."
+    },
+    {
+      "id": 1783,
+      "name": "Interface de Áudio Standart – ST2",
+      "slug": "interface-de-audio-standart-is2",
+      "cat": "interfaces",
+      "price": 260,
+      "regular": 260,
+      "stock": true,
+      "img": "assets/img/wp/2020-09-mg-6456-1-removebg-preview.webp",
+      "imgs": [],
+      "desc": "Interface de áudio Standart ST2 de entrada, com 1 entrada P10 para ligar instrumento ou microfone, para gravar no celular ou no computador.\nA interface tem 1 entrada, que recebe um som de cada vez, e 1 saída para conectar ao computador. Serve para microfones e instrumentos e permite uma gravação ordenada e limpa.\nÉ uma interface de alimentação passiva e não tem alimentação fantasma.\nEspecificações: 1 entrada P10, 1 saída, alimentação passiva, sem phantom power, compatível com Android, iOS e Linux."
+    },
+    {
+      "id": 1779,
+      "name": "Interface de Áudio Standart – ST1",
+      "slug": "interface-de-audio-standart-st1",
+      "cat": "interfaces",
+      "price": 150,
+      "regular": 150,
+      "stock": true,
+      "img": "assets/img/wp/2020-09-picsart-12-19-03-02-08.webp",
+      "imgs": [],
+      "desc": "A interface mais simples da linha, para começar a gravar com qualidade."
+    },
+    {
+      "id": 1686,
+      "name": "IS2 – Interface de Áudio",
+      "slug": "is2-interface-de-audio",
+      "cat": "interfaces",
+      "price": 320,
+      "regular": 320,
+      "stock": true,
+      "img": "assets/img/wp/2020-06-img-5908.webp",
+      "imgs": [
+        "assets/img/wp/2020-06-img-5903.webp"
+      ],
+      "desc": "Interface IS2 para instrumento e voz."
+    },
+    {
+      "id": 1674,
+      "name": "IS1 – Interface de Áudio",
+      "slug": "is1-interface-de-audio",
+      "cat": "interfaces",
+      "price": 260,
+      "regular": 280,
+      "stock": true,
+      "img": "assets/img/wp/2020-06-img-5919.webp",
+      "imgs": [
+        "assets/img/wp/2020-06-img-5888.webp"
+      ],
+      "desc": "Interface IS1 compacta para instrumento."
+    },
+    {
+      "id": 3313514685,
+      "name": "Interface ST1 com Cabos P10-P10 e P10-P3",
+      "slug": "interface-st1-com-cabos-p10-p10-e-p10-p3",
+      "cat": "interfaces",
+      "price": 225.0,
+      "regular": 225.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/3313514685-1.webp",
+      "imgs": [
+        "assets/img/ml/3313514685-2.webp"
+      ],
+      "desc": "Interface de áudio Standart ST1 para lives, com 1 entrada P10 e cabo P3 para conectar mesa de som ou microfone com alimentação ao smartphone.\nO modelo tem 1 canal de entrada em P10, 1 entrada P2 para fone de ouvido e cabo P3 para conexão em smartphone. Não possui saída P10. Os componentes são 100% blindados.\nAtenção: é uma interface passiva, sem alimentação fantasma. Deve ser usada com mesa de som ou com microfone que tenha alimentação própria; sem isso, o volume fica baixo. Não funciona com microfones condensadores sem mesa de som.\nAcompanha: interface ST1 e cabos P10-P10 e P10-P3 de 1,5 m.\nEspecificações: 1 entrada P10, entrada P2 para fone, 1 saída, alimentação passiva, sem phantom power, compatível com Android, iOS, Linux e Windows e com adaptadores Lightning e Tipo C."
+    },
+    {
+      "id": 2022,
+      "name": "Microfone Gold Pro GP-LV1 Omnidirecional Preto",
+      "slug": "microfone-gold-pro-gp-lv1-omnidirecional-preto",
+      "cat": "microfones",
+      "price": 298,
+      "regular": 298,
+      "stock": true,
+      "featured": true,
+      "img": "assets/img/wp/2021-03-img-6634.webp",
+      "imgs": [
+        "assets/img/wp/2021-03-img-6637.webp",
+        "assets/img/wp/2021-03-img-6644.webp"
+      ],
+      "desc": "Microfone de lapela Gold Pro GP-LV1, omnidirecional, com cabo de 3 metros, para celular, computador, mesa de som e câmera.\nO padrão polar omnidirecional capta o som de todas as direções. A faixa de frequência de 65 Hz a 18 kHz é indicada para entrevistas, vlogs, aulas, lives e gravações em estúdio.\nO design de lapela e o cabo de 3 m dão liberdade de movimento ao gravar ou se apresentar, e a simplicidade de uso atende tanto iniciantes quanto profissionais.\nEspecificações: microfone condensador de lapela, omnidirecional, resposta em frequência de 65 Hz a 18 kHz, cabo de 3 m, alimentação por bateria de 1,5 V."
+    },
+    {
+      "id": 2842,
+      "name": "Microfone Condensador AU03",
+      "slug": "microfone-condensador-au03",
+      "cat": "microfones",
+      "price": 950,
+      "regular": 950,
+      "stock": true,
+      "img": "assets/img/wp/2022-03-microfone-condensador-profissional-maono-au-a03-kit-de-estudio-cardioide-podcast-para-jogos-karaoke-youtube-gravacao-96341.webp",
+      "imgs": [],
+      "desc": "Condensador cardioide de estúdio, cápsula de 16 mm, 30 Hz–16 kHz, SPL máx. 120 dB, relação S/R 70 dB."
+    },
+    {
+      "id": 2664,
+      "name": "Microfone Condensador AU02",
+      "slug": "microfone-condensador-au02",
+      "cat": "microfones",
+      "price": 259,
+      "regular": 259,
+      "stock": true,
+      "img": "assets/img/wp/2021-10-gold-pro-recomenda-3.webp",
+      "imgs": [],
+      "desc": "Condensador para voz e violão, podcasts e lives."
+    },
+    {
+      "id": 2074,
+      "name": "Microfone Condensador Maono TR60",
+      "slug": "microfone-condensador-gp-super-pro",
+      "cat": "microfones",
+      "price": 459,
+      "regular": 459,
+      "stock": true,
+      "img": "assets/img/wp/2021-04-1616996642224.webp",
+      "imgs": [
+        "assets/img/wp/2021-04-1616996823327.webp"
+      ],
+      "desc": "Condensador Maono TR60 para gravações de voz."
+    },
+    {
+      "id": 2071,
+      "name": "Microfone Condensador M800",
+      "slug": "microfone-condensador-m800",
+      "cat": "microfones",
+      "price": 156,
+      "regular": 235,
+      "stock": true,
+      "img": "assets/img/wp/2021-04-1616996292940.webp",
+      "imgs": [],
+      "desc": "Condensador M800 com ótimo custo-benefício."
+    },
+    {
+      "id": 1787,
+      "name": "Microfone de Lapela – SR411",
+      "slug": "microfone-de-lapela-sr411",
+      "cat": "microfones",
+      "price": 390,
+      "regular": 390,
+      "stock": true,
+      "img": "assets/img/wp/2020-09-1613322748584.webp",
+      "imgs": [],
+      "desc": "Microfone de lapela Gold Pro SR411 com conexão P10, para vídeo e lives, que também pode ser usado como captador de instrumentos acústicos.\nCapta o som por ambiência e por contato com a vibração do instrumento, então serve como microfone e, ao mesmo tempo, como captação para seu instrumento musical.\nA fixação é feita com massinha adesiva ou com clip de encaixe para gola de camisa.\nEspecificações: conexão P10, cabo de 1 m, padrão polar cardioide, alimentação por 2 pilhas AAA."
+    },
+    {
+      "id": 2876,
+      "name": "Microfone Lapela Boya BY-M1B2",
+      "slug": "microfone-lapela-boya-by-m1b2",
+      "cat": "microfones",
+      "price": 108,
+      "regular": 108,
+      "stock": true,
+      "img": "assets/img/wp/2022-05-81rb2q2rtbl-ac-sl1500.webp",
+      "imgs": [],
+      "desc": "Lapela omnidirecional para smartphone, DSLR, filmadora e PC. 65 Hz–18 kHz. Inclui bateria LR44, espuma e adaptador."
+    },
+    {
+      "id": 1980989858,
+      "name": "Kit Microfone Condensador Maono AU-A03",
+      "slug": "kit-microfone-condensador-maono-au-a03",
+      "cat": "microfones",
+      "price": 750.0,
+      "regular": 750.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/1980989858-1.webp",
+      "imgs": [
+        "assets/img/ml/1980989858-2.webp",
+        "assets/img/ml/1980989858-3.webp",
+        "assets/img/ml/1980989858-4.webp"
+      ],
+      "desc": "Kit de microfone condensador Maono AU-A03 com braço de lança, filtro pop e cabo de 2,5 m, para gravações, apresentações, jogos e vozes no computador.\nÉ plug e gravação: conecte o conector de 3,5 mm do computador ao microfone com o cabo incluído e comece a gravar. Compatível com Windows 10, 8 (incluindo 8.1), 7, Vista e XP (Home e Professional).\nO conjunto inclui um braço de lança resistente, com filtro pop e windscreen de espuma. O microfone é de metal e entrega áudio cristalino.\nAcompanha: microfone Maono AU-A03, braço de lança, filtro pop, windscreen de espuma e cabo de 2,5 m com conector de 3,5 mm.\nEspecificações: núcleo de 16 mm de diâmetro; padrão polar cardioide; resposta em frequência de 30 Hz a 16 kHz; sensibilidade de -38 dB ±2 dB (0 dB = 1 V/Pa a 1 kHz); nível de ruído equivalente de até 16 dBA; SPL de 120 dB; relação sinal/ruído de 70 dB; corrente de 3 mA; tensão de 1,5 V."
+    },
+    {
+      "id": 2641,
+      "name": "Kit Interface D13 + Mic Condensador AU02",
+      "slug": "kit-interface-d13-mic-condensador-au02",
+      "cat": "kits",
+      "price": 650,
+      "regular": 650,
+      "stock": true,
+      "featured": true,
+      "img": "assets/img/wp/2021-10-gold-pro-recomenda.webp",
+      "imgs": [],
+      "desc": "Gold Pro Recomenda! Interface D13 + Condensador AU02 e um microfone de lapela de brinde. Para voz e violão, podcasts e lives."
+    },
+    {
+      "id": 2101,
+      "name": "Kit IS7 + Mic Maono TR60",
+      "slug": "kit-is7-mic-gold-pro-super",
+      "cat": "kits",
+      "price": 728,
+      "regular": 728,
+      "stock": true,
+      "img": "assets/img/wp/2021-04-gold-pro-recomenda-2.webp",
+      "imgs": [],
+      "desc": "Interface IS7 Extreme Active com microfone condensador Maono TR60."
+    },
+    {
+      "id": 2054,
+      "name": "Kit Interface IS7 Extreme Active + Microfone Condensador AU02",
+      "slug": "interface-is7-extreme-active-microfone-condensador-m-800-kit-live-5",
+      "cat": "kits",
+      "price": 598,
+      "regular": 598,
+      "stock": true,
+      "img": "assets/img/wp/2021-03-gold-pro-recomenda-1.webp",
+      "imgs": [
+        "assets/img/wp/2021-03-img-6854.webp"
+      ],
+      "desc": "Kit live com interface IS7 Extreme Active e condensador AU02."
+    },
+    {
+      "id": 2158,
+      "name": "Interface IS7 + Maono Black A03 – Kit Live Super Top",
+      "slug": "interface-is7-maono-black-a03-kit-live-super-top",
+      "cat": "kits",
+      "price": 1130,
+      "regular": 1130,
+      "stock": true,
+      "img": "assets/img/wp/2021-05-img-6802-1-e1621911378786.webp",
+      "imgs": [
+        "assets/img/wp/2021-05-img-6807.webp"
+      ],
+      "desc": "O kit mais completo: IS7 Extreme Active + condensador Maono Black A03."
+    },
+    {
+      "id": 2279,
+      "name": "Kit Live – ST2/V + Mesa de Som 4 Canais",
+      "slug": "kit-live-st2v-mesa-de-som",
+      "cat": "kits",
+      "price": 639,
+      "regular": 689,
+      "stock": true,
+      "img": "assets/img/wp/2021-09-picsart-08-31-09-53-46.webp",
+      "imgs": [],
+      "desc": "Interface ST2/V com mesa de som de 4 canais para lives com vários instrumentos."
+    },
+    {
+      "id": 1948,
+      "name": "Interface ST2/V + Microfone SR411 – Kit Live 2",
+      "slug": "interface-st2-v-microfone-sr411-kit-live-2",
+      "cat": "kits",
+      "price": 450,
+      "regular": 530,
+      "stock": true,
+      "img": "assets/img/wp/2021-01-design-sem-nome-3.webp",
+      "imgs": [],
+      "desc": "Interface ST2/V com lapela SR411."
+    },
+    {
+      "id": 1945,
+      "name": "Interface ST2 + Microfone SR411 – Kit Live 1",
+      "slug": "interface-st2-microfone-sr411-kit-live-1",
+      "cat": "kits",
+      "price": 398,
+      "regular": 398,
+      "stock": true,
+      "img": "assets/img/wp/2020-09-img-6314.webp",
+      "imgs": [],
+      "desc": "Kit para lives com 1 microfone de lapela SR411 e 1 interface ST2. Preço do conjunto com desconto."
+    },
+    {
+      "id": 2011,
+      "name": "ST2 + Microfone Lapela",
+      "slug": "st2-microfone-lapela",
+      "cat": "kits",
+      "price": 320,
+      "regular": 320,
+      "stock": true,
+      "img": "assets/img/wp/2021-03-picsart-03-08-08-56-14.webp",
+      "imgs": [],
+      "desc": "Interface ST2 com microfone de lapela."
+    },
+    {
+      "id": 2895,
+      "name": "Cabo P10 5m",
+      "slug": "cabo-p10-5m",
+      "cat": "acessorios",
+      "price": 55,
+      "regular": 55,
+      "stock": true,
+      "img": "assets/img/wp/2022-06-design-sem-nome-3.webp",
+      "imgs": [],
+      "desc": "Cabo P10 mono de 5 m, modelo fino tiaflex com blindagem anti-ruído, para as captações Gold Pro. Precisa de plugue em L? Adicione uma nota no pedido."
+    },
+    {
+      "id": 1957,
+      "name": "Mesa de Som 4 Canais",
+      "slug": "mesa-de-som-4-canais",
+      "cat": "acessorios",
+      "price": 439,
+      "regular": 439,
+      "stock": true,
+      "img": "assets/img/wp/2021-01-img-6618.webp",
+      "imgs": [
+        "assets/img/wp/2021-01-img-6605.webp"
+      ],
+      "desc": "Mesa de som compacta de 4 canais."
+    },
+    {
+      "id": 2655,
+      "name": "Braço Articulado para Microfones e Acessórios de Mesa",
+      "slug": "braco-articulado-para-microfones-e-acessorios-de-mesa",
+      "cat": "acessorios",
+      "price": 95,
+      "regular": 95,
+      "stock": true,
+      "img": "assets/img/wp/2021-10-a8924eab3bfaa663455d80594f6f7e3d.webp",
+      "imgs": [],
+      "desc": "Braço tesoura com suspensão para microfone, ideal para home studio, podcast, lives e home office."
+    },
+    {
+      "id": 2260,
+      "name": "Adaptador Lightning para Fone 3,5 mm – Original Apple",
+      "slug": "adaptador-de-lightning-para-conector-de-fones-de-ouvido-de-35-mm-original-apple",
+      "cat": "acessorios",
+      "price": 119,
+      "regular": 119,
+      "stock": false,
+      "img": "assets/img/wp/2021-08-mmx62-av1.webp",
+      "imgs": [],
+      "desc": "Adaptador original Apple de Lightning para conector de fone 3,5 mm."
+    },
+    {
+      "id": 2108,
+      "name": "Adaptador Tipo C em Corda",
+      "slug": "adaptador-tipo-c-em-corda",
+      "cat": "acessorios",
+      "price": 40,
+      "regular": 40,
+      "stock": false,
+      "img": "assets/img/wp/2021-04-5d9c5c9d807e432186c37b51-large.webp",
+      "imgs": [],
+      "desc": "Adaptador USB Tipo C."
+    },
+    {
+      "id": 4263729835,
+      "name": "Cabo P10 x P2 para Captador de Rastilho RT6 e RT7",
+      "slug": "cabo-p10-x-p2-para-captador-de-rastilho-rt6-e-rt7",
+      "cat": "acessorios",
+      "price": 55.0,
+      "regular": 55.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/4263729835-1.webp",
+      "imgs": [],
+      "desc": "Cabo P10 x P2 fino de 5 metros para os captadores de rastilho Gold Pro RT6 e RT7.\nO conector de entrada é P2 e o de saída é P10, para uma conexão segura e estável, com o mínimo de perda de sinal e interferência. Os 5 metros de comprimento dão liberdade para se movimentar em estúdio, no palco ou em casa.\nEspecificações: comprimento de 5 m, fio fino, conector de entrada P2, conector de saída P10, compatível com os modelos RT6 e RT7."
+    },
+    {
+      "id": 4047444735,
+      "name": "Preamp Equalizador Gold Pro EQ4P",
+      "slug": "preamp-equalizador-gold-pro-eq4p",
+      "cat": "acessorios",
+      "price": 580.0,
+      "regular": 580.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/4047444735-1.webp",
+      "imgs": [
+        "assets/img/ml/4047444735-2.webp",
+        "assets/img/ml/4047444735-3.webp",
+        "assets/img/ml/4047444735-4.webp",
+        "assets/img/ml/4047444735-5.webp"
+      ],
+      "desc": "Pré-amplificador equalizador Gold Pro EQ4P para violão, cavaquinho, ukulele, bandolim, cello e outros instrumentos acústicos com captador de contato ou piezoelétrico (rastilho).\nFoi desenvolvido para corrigir timbres metálicos, estridentes e sem corpo, entregando uma resposta mais equilibrada e encorpada.\nOs controles individuais de Bass, Mid e Treble permitem moldar o som, eliminar frequências indesejadas e realçar os graves com definição. O alto ganho garante volume consistente em apresentações e gravações.\nA alimentação é feita por um conector P4 para fonte ou bateria (6V a 9V), e o compartimento interno comporta 2 mini baterias de lítio.\nEspecificações: equalização de 3 bandas; Bass ±12 dB em 70 Hz; Mid ±15 dB em 320 Hz; Treble ±12 dB em 2,5 kHz; ganho de volume máximo plano de 23 dB; resposta em frequência de 20 Hz a 20 kHz; 1 canal, entrada P10 e saída P10."
+    },
+    {
+      "id": 4047510817,
+      "name": "Preamp Equalizador Gold Pro EQ52CH",
+      "slug": "preamp-equalizador-gold-pro-eq52ch",
+      "cat": "acessorios",
+      "price": 780.0,
+      "regular": 780.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/4047510817-1.webp",
+      "imgs": [
+        "assets/img/ml/4047510817-2.webp",
+        "assets/img/ml/4047510817-3.webp",
+        "assets/img/ml/4047510817-4.webp"
+      ],
+      "desc": "Pré-amplificador externo Gold Pro com 2 canais de entrada P10 e equalizador, para usar dois captadores, ou captador e microfone, em instrumentos acústicos.\nFunciona como um mixer integrado: é possível ligar, por exemplo, um captador de rastilho e um captador de contato ao mesmo tempo. Também aceita microfones cardioides ou de lapela, desde que alimentados por bateria de 1,5V.\nAumenta o ganho e valoriza o timbre de captadores passivos. Aceita inclusive guitarras com captadores magnéticos, para um som mais característico de violão.\nPode ser fixado na parte traseira do instrumento com velcro, preso ao cinto ou pendurado em estante de partitura ou pedestal.\nA alimentação usa 2 mini baterias de lítio de fácil troca, com acesso lateral, ou fonte externa de 6V a 9V na entrada P4 (fonte não inclusa). Para eliminar ruídos da rede elétrica, o uso de baterias é altamente recomendado.\nEspecificações: 2 entradas P10 independentes, 1 saída P10, resposta em frequência de 20 Hz a 20 kHz, alimentação por bateria ou fonte de 6V a 9V. Compatível com captadores de rastilho e de contato e com microfones, em bandolim, banjo, cavaquinho, cello, viola, violino e violão."
+    },
+    {
+      "id": 6539496910,
+      "name": "Pocket Guitar Violão",
+      "slug": "pocket-guitar-violao",
+      "cat": "acessorios",
+      "price": 196.91,
+      "regular": 196.91,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/6539496910-1.webp",
+      "imgs": [
+        "assets/img/ml/6539496910-2.webp",
+        "assets/img/ml/6539496910-3.webp",
+        "assets/img/ml/6539496910-4.webp"
+      ],
+      "desc": "Pocket Guitar Violão: braço de treino portátil e silencioso para praticar acordes e dedilhado em qualquer lugar.\nTem as proporções de um braço de violão, com a mesma tensão, resistência e espaçamento do instrumento original. Por ser silencioso, permite treinar a memória muscular e a força nos dedos no ônibus, no escritório ou de madrugada, sem incomodar ninguém.\nO design é dupla face: de um lado você memoriza e pratica a troca de acordes; do outro, treina a mão direita com dedilhados e ritmos. Cabe na mochila.\nComo as cordas têm a tensão do instrumento, o treino fortalece os dedos e ajuda a criar calos, e o que se pratica nele pode ser aplicado direto no violão.\nEspecificações: construção em madeira, 6 cordas, acabamento fosco, cor marrom, orientação para destros."
+    },
+    {
+      "id": 6857500472,
+      "name": "Pocket Guitar Guitarra",
+      "slug": "pocket-guitar-guitarra",
+      "cat": "acessorios",
+      "price": 209.0,
+      "regular": 209.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/6857500472-1.webp",
+      "imgs": [
+        "assets/img/ml/6857500472-2.webp",
+        "assets/img/ml/6857500472-3.webp",
+        "assets/img/ml/6857500472-4.webp",
+        "assets/img/ml/6857500472-5.webp"
+      ],
+      "desc": "Pocket Guitar Guitarra: braço de treino portátil e silencioso para praticar acordes, escalas e palhetadas em qualquer lugar, sem cabos nem amplificador.\nTem as proporções de um braço de guitarra, com a mesma tensão, resistência e espaçamento do instrumento original. Você treina a memória muscular, a velocidade e a força nos dedos sem emitir som e sem incomodar ninguém, no ônibus, no escritório ou de madrugada.\nO design é dupla face: de um lado você memoriza e pratica a troca de acordes, escalas e digitação; do outro, treina a mão direita com palhetadas, ritmos e dedilhados. Cabe na mochila.\nComo as cordas têm a tensão do instrumento, o treino fortalece os dedos, dá agilidade e mantém os calos, e o que se pratica nele pode ser aplicado direto na guitarra.\nEspecificações: construção em madeira."
+    },
+    {
+      "id": 4719677083,
+      "name": "Pocket Guitar Cavaco",
+      "slug": "pocket-guitar-cavaco",
+      "cat": "acessorios",
+      "price": 198.0,
+      "regular": 198.0,
+      "stock": true,
+      "isNew": false,
+      "img": "assets/img/ml/4719677083-1.webp",
+      "imgs": [
+        "assets/img/ml/4719677083-2.webp",
+        "assets/img/ml/4719677083-3.webp"
+      ],
+      "desc": "Pocket Guitar Cavaco: braço de treino portátil e silencioso para praticar acordes, quadradinhos e ritmo do cavaquinho em qualquer lugar.\nTem as proporções e a escala de um braço de cavaco, com a mesma tensão, resistência e espaçamento do instrumento original. Você treina a memória muscular, a agilidade das posições e a força nos dedos sem emitir som e sem incomodar ninguém.\nO design é dupla face: de um lado você memoriza e pratica a transição de acordes, quadradinhos e escalas; do outro, treina a mão direita para aperfeiçoar a palhetada, o molejo e o ritmo. O formato é ultracompacto e cabe na mochila.\nComo as cordas têm a tensão do instrumento, o treino fortalece os dedos e ajuda a criar calos, e o que se pratica nele pode ser aplicado direto no cavaquinho.\nEspecificações: construção em madeira."
+    }
+  ]
+}

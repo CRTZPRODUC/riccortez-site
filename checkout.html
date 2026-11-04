@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finalizar compra · Ric Cortez Pickups</title>
+  <meta name="description" content="Finalize sua compra na Ric Cortez Pickups.">
+  <meta name="robots" content="noindex">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-style='italic' font-size='20' text-anchor='middle' fill='%23d4a437'%3ER%3C/text%3E%3C/svg%3E">
+  <script>try{var t=localStorage.getItem('rc-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <link rel="stylesheet" href="assets/css/checkout.css">
+  <script type="module" src="assets/js/checkout.js"></script>
+</head>
+<body>
+  <div data-header></div>
+
+  <main id="main" tabindex="-1" class="co">
+    <div class="container co-wrap">
+      <h1 class="co-title">Finalizar compra</h1>
+      <div class="co-empty" data-co-empty hidden>
+        <p>Seu carrinho está vazio.</p>
+        <a class="btn btn-primary" href="loja.html">Ver produtos</a>
+      </div>
+      <form class="co-grid" data-co-form novalidate hidden>
+        <div class="co-main">
+          <section class="co-box" aria-labelledby="co-h-you">
+            <h2 id="co-h-you"><span>1</span> Seus dados</h2>
+            <div class="field"><label for="co-name">Nome completo</label>
+              <input id="co-name" name="name" autocomplete="name" required minlength="5" maxlength="120"></div>
+            <div class="co-row">
+              <div class="field"><label for="co-email">E-mail</label>
+                <input id="co-email" name="email" type="email" autocomplete="email" required maxlength="160" placeholder="voce@email.com"></div>
+              <div class="field"><label for="co-phone">Celular com DDD</label>
+                <input id="co-phone" name="phone" type="tel" autocomplete="tel-national" inputmode="numeric" required placeholder="(11) 90000-0000"></div>
+            </div>
+            <div class="field"><label for="co-cpf">CPF <small>(opcional, para a nota fiscal)</small></label>
+              <input id="co-cpf" name="cpf" inputmode="numeric" placeholder="000.000.000-00"></div>
+          </section>
+
+          <section class="co-box" aria-labelledby="co-h-addr">
+            <h2 id="co-h-addr"><span>2</span> Endereço de entrega</h2>
+            <div class="co-row co-row-cep">
+              <div class="field"><label for="co-cep">CEP</label>
+                <input id="co-cep" name="cep" inputmode="numeric" autocomplete="postal-code" required placeholder="00000-000"></div>
+              <p class="co-hint" data-cep-hint aria-live="polite"></p>
+            </div>
+            <div class="co-row co-row-street">
+              <div class="field"><label for="co-street">Rua</label>
+                <input id="co-street" name="street" autocomplete="address-line1" required maxlength="160"></div>
+              <div class="field"><label for="co-number">Número</label>
+                <input id="co-number" name="number" required maxlength="20"></div>
+            </div>
+            <div class="field"><label for="co-complement">Complemento <small>(opcional)</small></label>
+              <input id="co-complement" name="complement" autocomplete="address-line2" maxlength="80"></div>
+            <div class="co-row co-row-city">
+              <div class="field"><label for="co-neighborhood">Bairro</label>
+                <input id="co-neighborhood" name="neighborhood" required maxlength="80"></div>
+              <div class="field"><label for="co-city">Cidade</label>
+                <input id="co-city" name="city" autocomplete="address-level2" required maxlength="80"></div>
+              <div class="field"><label for="co-state">UF</label>
+                <input id="co-state" name="state" autocomplete="address-level1" required maxlength="2" pattern="[A-Za-z]{2}"></div>
+            </div>
+          </section>
+
+          <section class="co-box" aria-labelledby="co-h-ship">
+            <h2 id="co-h-ship"><span>3</span> Frete</h2>
+            <div data-ship-options aria-live="polite"><p class="muted">Digite o CEP para ver as opções.</p></div>
+          </section>
+        </div>
+
+        <aside class="co-box co-summary" aria-labelledby="co-h-sum">
+          <h2 id="co-h-sum">Resumo do pedido</h2>
+          <ul class="co-lines" data-co-lines></ul>
+          <div class="sum-row"><span>Produtos</span><strong data-co-subtotal></strong></div>
+          <div class="sum-row"><span>Frete</span><strong data-co-ship>—</strong></div>
+          <div class="sum-row co-total"><span>Total</span><strong data-co-total></strong></div>
+          <div class="sum-row co-pix" data-co-pix-row hidden><span data-co-pix-label></span><strong data-co-pix></strong></div>
+          <p class="co-inst" data-co-inst></p>
+          <p class="co-error" data-co-error role="alert"></p>
+          <button class="btn btn-primary btn-block btn-lg" type="submit" data-co-submit>Ir para o pagamento</button>
+          <p class="co-safe muted small">Pagamento seguro pela InfinitePay, com Pix ou cartão. Você confere tudo antes de pagar.</p>
+        </aside>
+      </form>
+    </div>
+  </main>
+
+  <div data-footer></div>
+</body>
+</html>

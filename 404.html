@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página não encontrada · Ric Cortez Pickups</title>
+  <meta name="robots" content="noindex">
+  <!--
+    GitHub Pages serves this file for every unknown path and cannot send real 301s.
+    Old WordPress/WooCommerce URLs (riccortez.com before the move) are sent to their
+    new page here. Paths are absolute because this page answers at any depth.
+  -->
+  <script>
+    (function () {
+      var path = decodeURIComponent(location.pathname).toLowerCase().replace(/\/+$/, '') || '/';
+      var PAGES = {
+        '/store': 'loja.html',
+        '/loja': 'loja.html',
+        '/shop': 'loja.html',
+        '/conheca-nossos-produtos': 'loja.html',
+        '/lancamentos': 'loja.html?sort=new',
+        '/carrinho': 'loja.html',
+        '/checkout': 'loja.html',
+        '/checkout-page': 'loja.html',
+        '/checkout-page-2': 'loja.html',
+        '/finalizacao-de-compra': 'loja.html',
+        '/obrigado': 'conta.html',
+        '/thank-you-page': 'conta.html',
+        '/thank-you-page-2': 'conta.html',
+        '/minha-conta': 'conta.html',
+        '/sobre': 'sobre.html',
+        '/endorse': 'sobre.html',
+        '/arthur-lauton': 'sobre.html',
+        '/erick-rick': 'sobre.html',
+        '/ian-coury': 'sobre.html',
+        '/contato': 'contato.html',
+        '/comercial': 'contato.html',
+        '/politicas-de-privacidade': 'politica-de-privacidade.html',
+        '/politicas-de-devolucao-e-trocas': 'trocas-e-devolucoes.html',
+        '/entregas-e-prazos': 'frete-e-entrega.html',
+        '/blog': '',
+        '/hello-world': ''
+      };
+      // WooCommerce category slugs that were renamed in the new catalog.
+      var CATS = {
+        'captadores': 'captadores',
+        'interface-de-audio': 'interfaces',
+        'microfone': 'microfones'
+      };
+      var to = null;
+      var m;
+      if (Object.prototype.hasOwnProperty.call(PAGES, path)) {
+        to = PAGES[path];
+      } else if ((m = path.match(/^\/product\/([a-z0-9-]+)$/))) {
+        // Every old product slug is kept in the new catalog; produto.html handles unknown ones.
+        to = 'produto.html?p=' + m[1];
+      } else if ((m = path.match(/^\/product-category\/([a-z0-9-]+)$/))) {
+        to = CATS[m[1]] ? 'loja.html?cat=' + CATS[m[1]] : 'loja.html';
+      } else if (/^\/(product-tag|category)\//.test(path)) {
+        to = 'loja.html';
+      }
+      if (to !== null) location.replace('/' + to);
+    })();
+  </script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3C/svg%3E">
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      padding: 24px 16px; box-sizing: border-box;
+      background: #050505; color: #f5f5f5;
+      font: 16px/1.6 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; text-align: center;
+    }
+    main { max-width: 480px; }
+    .code { font-size: 64px; font-weight: 800; line-height: 1; color: #f5c842; margin: 0 0 12px; }
+    h1 { font-size: 24px; margin: 0 0 8px; }
+    p { color: #c4c4c4; margin: 0 0 24px; }
+    nav { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    a {
+      display: inline-block; padding: 12px 20px; border-radius: 8px; font-weight: 600;
+      text-decoration: none; color: #f5f5f5; border: 1px solid #333;
+    }
+    a.primary { background: #f5c842; border-color: #f5c842; color: #0a0a0a; }
+    a:focus-visible { outline: 2px solid #f5c842; outline-offset: 3px; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="code" aria-hidden="true">404</p>
+    <h1>Página não encontrada</h1>
+    <p>O endereço pode ter mudado com o novo site. Veja a loja ou volte para o início.</p>
+    <nav>
+      <a class="primary" href="/loja.html">Ver a loja</a>
+      <a href="/">Página inicial</a>
+    </nav>
+  </main>
+</body>
+</html>

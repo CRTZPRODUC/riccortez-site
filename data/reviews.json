@@ -1,0 +1,47 @@
+{
+  "source": "Real buyer reviews copied from the store's Mercado Livre listings on 2026-11-02 (text kept as written; only Mercado Livre's automatic trailing period after ! was dropped). average and total are the listing's overall numbers on that date. \"variants\" lists products that are the same pickup sold with extras (cable, transmitter, kit); their pages show these reviews with a note naming the reviewed listing.",
+  "products": {
+    "jackcap-1-up": {
+      "url": "https://www.mercadolivre.com.br/captador-de-violao-violino-contato-jackcap-1-up-p10/p/MLB28534868?pdp_filters=item_id:MLB3561511421",
+      "average": 4.5,
+      "total": 724,
+      "variants": ["jackcap-1-up-com-cabo-p10", "kit-5-captadores-jackcap-1-up"],
+      "items": [
+        { "rating": 5, "text": "Muito bom. Usei em todas as cordas da orquestra, zero microfonia e um timbre excelente. O resultado foi acima das expectativas." },
+        { "rating": 5, "text": "Produto perfeito, muito prático. O som que ele envia para a mesa simplesmente perfeito. Quando forem colocar no violão devem ler o manual para ter noção a posição correta onde deverá ficar o captador, conforme a posição que seja instalado o timbre poderá ficar mais grave ou mais agudo. Super recomendo!" },
+        { "rating": 5, "text": "Excelente captação sonora dá para usar em diversos instrumentos!!" },
+        { "rating": 5, "text": "O captador muito bom, amplifica sem perder a qualidade, realmente timbre de violino, a massinha de fixação não é tão rígida quanto precisa aperfeiçoar mas em relação ao som de qualidade!!" },
+        { "rating": 5, "text": "Coloquei em meu ukulele e ficou top demais." },
+        { "rating": 5, "text": "Usei no meu violão. Tem boa captação,mas capta muito o som do tampo, acredito que para violino dá mais certo,pois a caixa sonora é menor, mas em si , cumpriu o prometido." }
+      ]
+    },
+    "jackcap-3-up": {
+      "url": "https://www.mercadolivre.com.br/captador-violino-violao-cello-c-volume-e-tone-jackcap-3-up-som/p/MLB28534778?pdp_filters=item_id:MLB4334358142",
+      "average": 4.6,
+      "total": 406,
+      "variants": ["jackcap-3-up-com-cabo-p10", "jackcap-3-up-com-transmissor"],
+      "items": [
+        { "rating": 5, "text": "Testei ele no violino, no violão, na harpa (33 cordas) e em todos o timbre foi perfeito! É fácil de usar e o resultado fica incrível! na harpa, captou todas as cordas perfeitamente, então não vai ter problema de pegar agudos e graves ao mesmo tempo! não subestimem esse captador nunca!" },
+        { "rating": 5, "text": "Captação incrível eu usava lapela e sofria com microfonia, esse captador é sensacional não dá microfonia." },
+        { "rating": 5, "text": "Sou músico profissional, toco em cerimônias de casamento. Comprei para usar no violino e atendeu muito bem. Dentro das expectativas. Ele fica com um pouco hamer, mas é só regular com pouco ganho na mesa que dá certo." },
+        { "rating": 5, "text": "Incrivel a captação, os componentes, excelente custo benefício e a potencialidade de timbrar o instrumento de diversas formas, riquíssimo, vale muito a pena." },
+        { "rating": 4, "text": "O áudio fica muito bom. Não pega som do ambiente apenas o que sai do instrumento." },
+        { "rating": 5, "text": "A qualidade dos timbres surpreendeu." }
+      ]
+    },
+    "jackcap-3-up-com-suporte-de-queixeira": {
+      "url": "https://www.mercadolivre.com.br/captador-violino-c-vol-jackcap-3-up-c-suporte-queixera/up/MLBU1751161286?wid=MLB4537955862",
+      "average": 4.7,
+      "total": 58,
+      "variants": ["jackcap-3-up-com-suporte-de-queixeira-e-cabo-p10"],
+      "items": [
+        { "rating": 5, "text": "Muito bom, fica firme no instrumento, som não fica deformado, ótimo, aprovadíssimo!" },
+        { "rating": 4, "text": "O jackcap 3 é bom. Tem como regular o volume, regular o tone, que inclusive, para sair bastante som eu coloco o tone numa potência bem alta. Achei o som agradável, fica semelhante ao som natural do violino. O adaptador de queixeira é muito útil, quando colocado certo no tampo do instrumento ele fica bem fixo, não sai e nem se mexe. Pelo preço eu diria que vale a pena, pois está cumprindo com o desejado, porém não sei quanto tempo ele duraria, anos por exemplo." },
+        { "rating": 5, "text": "Mt bom usei em 2 casamentos." },
+        { "rating": 5, "text": "Muito bom, o timbre do violino fica bem parecido." },
+        { "rating": 5, "text": "Gostei chegou antes do prazo super rápido , super recomendo. Muito satisfeito. Parabéns." },
+        { "rating": 5, "text": "Produto sensacional. Recomendo." }
+      ]
+    }
+  }
+}

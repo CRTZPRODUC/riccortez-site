@@ -576,6 +576,68 @@
 .bn-ticker span::after { content: "✦"; margin: 0 22px; }
 @keyframes bn-marquee { to { transform: translateX(-50%); } }
 
+/* Black November deals carousel (home, under the trust strip). Always black and gold, in both themes. */
+.bn-deals {
+  position: relative; padding: 48px 0 52px; color: #f5f5f5; overflow: hidden;
+  background: radial-gradient(120% 90% at 85% 0%, rgba(245, 200, 66, .16), transparent 60%), #070707;
+  border-bottom: 1px solid rgba(245, 200, 66, .25);
+}
+.bn-deals-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px 32px; flex-wrap: wrap; margin-bottom: 26px; }
+.bn-deals-kicker { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #f5c842; margin-bottom: 6px; }
+.bn-deals-title { font-family: "Anton", Impact, "Arial Narrow", sans-serif; font-weight: 400; font-size: clamp(36px, 5vw, 60px); line-height: .95; letter-spacing: .01em; text-transform: uppercase; color: #fff; }
+.bn-deals-title span { background: linear-gradient(180deg, #ffe08a, #f5c842 45%, #b88b1f); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.bn-deals-inst {
+  display: flex; align-items: center; gap: 12px; max-width: 430px; margin: 0; padding: 12px 18px;
+  border: 1px solid rgba(245, 200, 66, .55); border-radius: 999px; background: rgba(245, 200, 66, .1);
+  font-size: 14px; line-height: 1.4; color: #e8e8e8;
+}
+.bn-deals-inst .ico { flex: none; color: #f5c842; }
+.bn-deals-inst b { color: #f5c842; }
+.bn-deals-wrap { position: relative; }
+.bn-deals-track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 3 * 20px) / 4); column-gap: 20px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  scrollbar-width: none; padding: 4px 2px 8px;
+}
+.bn-deals-track::-webkit-scrollbar { display: none; }
+.bn-deals-track:focus-visible { outline: 2px solid #f5c842; outline-offset: 4px; }
+.bn-deal { scroll-snap-align: start; display: flex; min-width: 0; }
+.bn-deal > .card { flex: 1; }
+.card--bn {
+  --bg-1: #111; --line: rgba(245, 200, 66, .35); --ink: #f5f5f5; --ink-3: #9a9a9a; --gold-text: #f5c842;
+  color: #f5f5f5; box-shadow: 0 0 0 1px rgba(245, 200, 66, .08), 0 18px 40px -24px rgba(245, 200, 66, .55);
+}
+.card--bn:hover { border-color: #f5c842; }
+.card--bn .card-price .now { color: #f5c842; }
+.tag.bn {
+  height: 26px; padding: 0 10px; gap: 5px; border-radius: 4px; font-size: 11px;
+  background: #0a0a0a; color: #f5c842; border: 1px solid #f5c842; box-shadow: 0 4px 14px -4px rgba(0, 0, 0, .6);
+}
+.tag.bn b { font-size: 13px; font-weight: 900; color: #fff; }
+.tag.bn-note { height: 26px; border-radius: 4px; background: linear-gradient(135deg, #ffe08a, #f5c842 50%, #d4a437); color: #0a0a0a; }
+.bn-deals-nav {
+  position: absolute; top: 38%; z-index: 3; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
+  background: #0a0a0a; color: #f5c842; border: 1px solid rgba(245, 200, 66, .6); cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.bn-deals-nav:hover { background: #f5c842; color: #0a0a0a; }
+.bn-deals-nav.prev { left: -22px; }
+.bn-deals-nav.next { right: -22px; }
+@media (max-width: 1180px) {
+  .bn-deals-nav.prev { left: -6px; }
+  .bn-deals-nav.next { right: -6px; }
+}
+@media (max-width: 1024px) {
+  .bn-deals-track { grid-auto-columns: calc((100% - 2 * 16px) / 3); column-gap: 16px; }
+}
+@media (max-width: 720px) {
+  .bn-deals { padding: 36px 0 40px; }
+  .bn-deals-head { margin-bottom: 20px; }
+  .bn-deals-inst { border-radius: var(--radius-lg); padding: 10px 14px; font-size: 13px; }
+  .bn-deals-track { grid-auto-columns: 62%; column-gap: 12px; }
+  .bn-deals-nav { display: none; }
+}
+
 @media (max-width: 720px) {
   .bn-count-grid div { min-width: 0; flex: 1; }
   .bn-count-grid strong { font-size: 24px; }

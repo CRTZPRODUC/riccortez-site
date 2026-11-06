@@ -454,15 +454,21 @@ function footerHTML(categories) {
 
 let catNames = {};
 
-export function productCard(p) {
+// opts.bn: Black November deal card (home carousel), with the campaign seal in place of the
+// red discount tag and an optional ribbon (opts.note, e.g. "Oferta única").
+export function productCard(p, opts = {}) {
   const pr = pricing(p);
   const url = `produto.html?p=${encodeURIComponent(p.slug)}`;
   const tags = [];
-  if (p.isNew) tags.push('<span class="tag gold">Novo</span>');
-  if (pr.onSale) tags.push(`<span class="tag red">-${pr.off}%</span>`);
+  if (opts.bn && pr.onSale) tags.push(`<span class="tag bn">Black <b>-${pr.off}%</b></span>`);
+  else {
+    if (p.isNew) tags.push('<span class="tag gold">Novo</span>');
+    if (pr.onSale) tags.push(`<span class="tag red">-${pr.off}%</span>`);
+  }
   if (!p.stock) tags.push('<span class="tag dark">Esgotado</span>');
+  if (opts.bn && opts.note) tags.push(`<span class="tag bn-note">${esc(opts.note)}</span>`);
   return `
-  <article class="card fade-up">
+  <article class="card${opts.bn ? ' card--bn' : ' fade-up'}">
     <div class="card-media">
       <img src="${esc(p.img)}" alt="" loading="lazy" decoding="async" width="400" height="400">
       ${tags.length ? `<div class="card-tags">${tags.join('')}</div>` : ''}

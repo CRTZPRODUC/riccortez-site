@@ -21,16 +21,25 @@ const BN_TICKER = ['Black November Gold Pro', 'Ofertas em todo o site', 'Novembr
 // Black November Gold Pro: the first hero slide plus the gold ticker under the hero. Both are
 // removed once CONFIG.BLACK_NOVEMBER.end has passed. Runs before initHero so the slide count
 // is right. Prices come from the catalog, so nothing here shows a price or a percentage.
-function initBlackNovember() {
+function initBlackNovember(products) {
   const slide = $('[data-bn]');
   const ticker = $('[data-bn-ticker]');
+  const deals = $('[data-bn-deals]');
   const cfg = CONFIG.BLACK_NOVEMBER;
   const end = cfg ? new Date(cfg.end).getTime() : 0;
   if (!(end > Date.now())) {
     if (slide) slide.remove();
     if (ticker) ticker.remove();
+    if (deals) deals.remove();
+    // The interest-free wording in the trust strip belongs to the campaign.
+    const inst = $('[data-bn-inst]');
+    if (inst) {
+      inst.textContent = 'de crédito';
+      inst.previousElementSibling.textContent = `Até ${CONFIG.MAX_INSTALLMENTS}x no cartão`;
+    }
     return;
   }
+  if (deals) initBnDeals(deals, products);
 
   if (slide) {
     const units = Object.fromEntries($$('[data-bn-unit]', slide).map((el) => [el.dataset.bnUnit, el]));
@@ -59,6 +68,66 @@ function initBlackNovember() {
     track.innerHTML = group.repeat(reps * 2);
     track.style.animationDuration = `${Math.round(track.scrollWidth / 2 / 50)}s`;
   }
+}
+
+// Black November featured deals, in carousel order (owner, 2026-11-05). The discounts
+// themselves live in data/products.json (price below regular); `note` adds a ribbon.
+const BN_DEALS = [
+  { slug: 'jackcap-1-up' },
+  { slug: 'rt6-gold-pro-p-violao-6-cordas', note: 'Oferta única' },
+  { slug: 'jackcap-3-up-com-suporte-de-queixeira-e-cabo-p10' },
+  { slug: 'jackcap-2-up' },
+  { slug: 'rt7-rastilho-gold-pro-p-violao-7-cordas-externo-p2', note: 'Oferta única' },
+  { slug: 'jackcap-3-up' },
+  { slug: 'gold-extreme-bass-duplo' },
+  { slug: 'gold-extreme-bass-individual' },
+  { slug: 'rt6-gold-pro-p-violao-6-cordas-externo-p2', note: 'Oferta única' },
+  { slug: 'rt7-rastilho-gold-pro-p-violao-7-cordas-interno-p10', note: 'Oferta única' },
+  { slug: 'rt6-gold-pro-p-violao-6-cordas-interno-p10', note: 'Oferta única' },
+];
+const BN_DEALS_DELAY = 3500;
+
+// Sideways carousel of the deals: native scroll-snap (swipe and trackpad work), arrow buttons,
+// and a gentle auto-advance that pauses on hover, focus, touch and hidden tabs, and is off
+// for reduced motion. Products missing, sold out or no longer on sale are skipped.
+function initBnDeals(root, products) {
+  const bySlug = new Map(products.map((p) => [p.slug, p]));
+  const items = BN_DEALS
+    .map((d) => ({ d, p: bySlug.get(d.slug) }))
+    .filter(({ p }) => p && p.stock && pricing(p).onSale);
+  if (!items.length) { root.remove(); return; }
+  const track = $('[data-bn-deals-track]', root);
+  track.innerHTML = items
+    .map(({ d, p }) => `<div class="bn-deal" role="listitem">${productCard(p, { bn: true, note: d.note })}</div>`)
+    .join('');
+  root.hidden = false;
+
+  const step = () => {
+    const card = track.firstElementChild;
+    return card ? card.getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0) : track.clientWidth;
+  };
+  const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+  const move = (dir) => {
+    if (dir > 0 && atEnd()) track.scrollTo({ left: 0, behavior: 'smooth' });
+    else if (dir < 0 && track.scrollLeft <= 4) track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' });
+    else track.scrollBy({ left: dir * step(), behavior: 'smooth' });
+  };
+  $('[data-bn-prev]', root).addEventListener('click', () => move(-1));
+  $('[data-bn-next]', root).addEventListener('click', () => move(1));
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let paused = false;
+  const pause = () => { paused = true; };
+  const resume = () => { paused = false; };
+  root.addEventListener('pointerenter', pause);
+  root.addEventListener('pointerleave', resume);
+  root.addEventListener('focusin', pause);
+  root.addEventListener('focusout', resume);
+  track.addEventListener('touchstart', pause, { passive: true });
+  track.addEventListener('touchend', () => setTimeout(resume, 4000), { passive: true });
+  setInterval(() => {
+    if (!paused && !document.hidden && track.scrollWidth > track.clientWidth) move(1);
+  }, BN_DEALS_DELAY);
 }
 
 /* ------------------------------------------------------------------ hero */
@@ -363,7 +432,7 @@ function wireFaq() {
   $('[data-free-ship-faq]').textContent = free;
   wireFaq();
   if (products.length) {
-    initBlackNovember();
+    initBlackNovember(products);
     initHero(products);
     renderCategories(categories, products);
     wireTabs(products);

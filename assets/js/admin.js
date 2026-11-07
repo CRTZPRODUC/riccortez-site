@@ -110,6 +110,18 @@ function matches(o) {
   return query.split(/\s+/).every((w) => hay.includes(w) || (digits(w) && hay.includes(digits(w))));
 }
 
+// Commission hold, mirroring affiliate_commission_state() in the database: held for HOLD_DAYS
+// after payment, then released; canceled when the order is canceled/refunded during the hold.
+const HOLD_DAYS = 15;
+const DAY = 86400000;
+function holdText(o) {
+  const release = new Date(new Date(o.paid_at).getTime() + HOLD_DAYS * DAY);
+  if (o.status === 'canceled' || o.status === 'refunded') {
+    return o.canceled_at && new Date(o.canceled_at) >= release ? 'liberada antes do cancelamento' : 'comissão cancelada';
+  }
+  return Date.now() < release.getTime() ? `retida até ${when(release.toISOString())}` : 'liberada';
+}
+
 // Affiliate commission of one order: the snapshot stored when it was paid (with the seal state),
 // or, while it waits for payment, a note that it is computed at payment time.
 function commissionHtml(o) {
@@ -117,7 +129,7 @@ function commissionHtml(o) {
     const seal = o.seal ? '<span class="adm-badge is-ok" title="Valores assinados no pagamento">Selado</span>'
       : '<span class="adm-badge is-bad" title="Pedido pago sem selo: rode a verificação de integridade">Sem selo</span>';
     const aff = o.affiliate_code
-      ? `Afiliado ${esc(o.affiliate_code)} · comissão ${esc(money(o.commission))} (${esc(pct(o.commission_pct))})`
+      ? `Afiliado ${esc(o.affiliate_code)} · comissão ${esc(money(o.commission))} (${esc(pct(o.commission_pct))}) · ${esc(holdText(o))}`
       : (o.ref ? 'Indicação sem afiliado ativo no pagamento: sem comissão' : '');
     return `${aff ? `<p class="adm-muted">${aff}</p>` : ''}<p>${seal}</p>`;
   }
@@ -173,6 +185,11 @@ function orderHtml(o, open) {
       ${o.ref ? `<p class="adm-muted">Indicação: ${esc(o.ref)}</p>` : ''}
       ${commissionHtml(o)}
       <p class="adm-muted">Criado em ${when(o.created_at)}</p>
+      ${o.canceled_at ? `<p class="adm-muted">${o.status === 'refunded' ? 'Reembolsado' : 'Cancelado'} em ${when(o.canceled_at)}</p>` : ''}
+      ${o.status === 'paid' || o.status === 'pending' ? `<p class="adm-cancel">
+        <button class="adm-copy" type="button" data-cancel="canceled">Cancelar pedido</button>
+        ${o.status === 'paid' ? '<button class="adm-copy" type="button" data-cancel="refunded">Marcar como devolvido</button>' : ''}
+      </p>` : ''}
     </div>
     ${o.status === 'paid' ? `<form class="adm-ship" data-ship>
       <label>Status do envio
@@ -259,11 +276,34 @@ document.addEventListener('click', (e) => {
   }
   const chip = e.target.closest('[data-filter]');
   if (chip) { filter = chip.dataset.filter; render(); return; }
+  const cancel = e.target.closest('[data-cancel]');
+  if (cancel) { cancelOrder(cancel); return; }
   const copy = e.target.closest('[data-copy]');
   if (copy) {
     navigator.clipboard.writeText(copy.dataset.copy).then(() => toast('Copiado'), () => toast('Não deu para copiar'));
   }
 });
+
+// Cancel or refund through admin_cancel_order(): the database stamps canceled_at, logs the change
+// and cancels the affiliate commission if it is still inside the hold.
+async function cancelOrder(btn) {
+  const code = btn.closest('.adm-order').dataset.code;
+  const status = btn.dataset.cancel;
+  const what = status === 'refunded' ? 'marcar o pedido como devolvido/reembolsado' : 'cancelar o pedido';
+  if (!confirm(`Confirma ${what} ${code}?
+
+O cliente recebe um e-mail avisando. Se houver comissão de afiliado ainda retida, ela é cancelada. Isso não pode ser desfeito.
+
+O estorno do dinheiro é feito na InfinitePay.`)) return;
+  btn.disabled = true;
+  const { data, error } = await (await supa()).rpc('admin_cancel_order', { p_code: code, p_status: status });
+  btn.disabled = false;
+  if (error) { toast('Não deu para alterar. Saia e entre de novo, ou tente mais tarde.'); return; }
+  const order = orders.find((o) => o.code === code);
+  if (order && data?.[0]) Object.assign(order, data[0]);
+  render();
+  toast(status === 'refunded' ? 'Pedido marcado como devolvido' : 'Pedido cancelado');
+}
 
 $('[data-search]').addEventListener('input', (e) => { query = e.target.value.trim().toLowerCase(); render(); });
 
@@ -378,18 +418,19 @@ function renderAffiliates() {
   const box = $('[data-aff-list]');
   if (!affiliates.length) { box.innerHTML = '<p class="adm-muted">Nenhum afiliado cadastrado.</p>'; return; }
   box.innerHTML = `<div class="adm-table-wrap"><table class="adm-table">
-    <thead><tr><th>Afiliado</th><th>Pedidos</th><th>Vendas pagas</th><th>Comissão a pagar</th><th>Comissão prevista</th><th>Ativo</th></tr></thead>
+    <thead><tr><th>Afiliado</th><th>Pedidos</th><th>Vendas pagas</th><th>Liberada (a pagar)</th><th>Retida (${HOLD_DAYS} dias)</th><th>Prevista</th><th>Ativo</th></tr></thead>
     <tbody>${affiliates.map((a) => `<tr class="${a.active ? '' : 'is-off'}">
       <td data-th="Afiliado"><b>${esc(a.code)}</b> · ${esc(a.name)}<br><span class="adm-muted">${esc(a.email || 'conta removida')} · ${pct(a.commission_pct)}</span>
         <br><button class="adm-copy" type="button" data-copy="https://riccortez.com/?ref=${esc(encodeURIComponent(a.code))}">Copiar link</button>
         <button class="adm-copy" type="button" data-aff-edit="${esc(a.code)}">Editar</button></td>
       <td data-th="Pedidos"><span>${Number(a.orders_count)} <span class="adm-muted">(${Number(a.paid_count)} pagos)</span></span></td>
       <td data-th="Vendas pagas">${money(a.paid_sales)}</td>
-      <td data-th="Comissão a pagar"><b class="is-wait">${money(a.commission_paid)}</b></td>
-      <td data-th="Comissão prevista"><span class="adm-muted" title="Projeção com a taxa atual; o valor fica fixo quando o pedido é pago">${money(a.commission_pending)}</span></td>
+      <td data-th="Liberada (a pagar)"><b class="is-wait">${money(a.commission_released)}</b></td>
+      <td data-th="Retida"><span title="Pedidos pagos há menos de ${HOLD_DAYS} dias; cancelada se o pedido for cancelado ou devolvido nesse prazo">${money(a.commission_held)}</span></td>
+      <td data-th="Prevista"><span class="adm-muted" title="Projeção com a taxa atual; o valor fica fixo quando o pedido é pago">${money(a.commission_pending)}</span></td>
       <td data-th="Ativo"><label class="adm-switch"><input type="checkbox" data-aff-active="${esc(a.code)}"${a.active ? ' checked' : ''}><span></span><em>${a.active ? 'Ativo' : 'Inativo'}</em></label></td>
     </tr>`).join('')}</tbody></table></div>
-    <p class="adm-muted adm-aff-note">Comissão sobre o valor dos produtos (sem frete). "A pagar" soma a comissão gravada em cada pedido no momento do pagamento (não muda se a taxa mudar depois). "Prevista" é só uma projeção dos pedidos que aguardam pagamento, com a taxa atual. Cancelados e reembolsados não contam.</p>`;
+    <p class="adm-muted adm-aff-note">Comissão sobre o valor dos produtos (sem frete), gravada em cada pedido no momento do pagamento (não muda se a taxa mudar depois). Ela fica retida por ${HOLD_DAYS} dias após o pagamento e só então é liberada para pagar ao afiliado; se o pedido for cancelado ou devolvido nesse prazo, a comissão é cancelada. "Prevista" é só uma projeção dos pedidos que aguardam pagamento, com a taxa atual.</p>`;
 }
 
 async function loadAffiliates() {

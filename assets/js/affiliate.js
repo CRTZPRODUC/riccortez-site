@@ -12,15 +12,21 @@ import { CONFIG } from './config.js';
 boot({ active: 'conta' });
 
 const SITE = 'https://riccortez.com/';
+// Commission states from the database: a paid order's commission is held ("retida") for
+// hold_days after payment, then released ("liberada"). Canceled or refunded during the hold,
+// it is canceled.
 const STATUS = {
-  pago: ['Pago', 'is-ok'],
-  pendente: ['Pendente', 'is-wait'],
+  liberada: ['Liberada', 'is-ok'],
+  retida: ['Retida', 'is-wait'],
+  pendente: ['Aguardando pagamento', 'is-wait'],
   cancelado: ['Cancelado', 'is-bad'],
 };
 const FILTERS = [
   ['all', 'Todos', () => true],
-  ['pago', 'Pagos', (o) => o.status === 'pago'],
-  ['pendente', 'Pendentes', (o) => o.status === 'pendente'],
+  ['liberada', 'Liberadas', (o) => o.status === 'liberada'],
+  ['retida', 'Retidas', (o) => o.status === 'retida'],
+  ['pendente', 'Aguardando pagamento', (o) => o.status === 'pendente'],
+  ['cancelado', 'Cancelados', (o) => o.status === 'cancelado'],
 ];
 
 const stateBox = $('[data-state]');
@@ -39,10 +45,11 @@ function state(html) {
 
 function renderCards(s) {
   const cards = [
-    ['Comissão a receber', money(s.commission_paid), 'Pedidos pagos', true],
+    ['Comissão liberada', money(s.commission_released), 'Pronta para receber', true],
+    ['Comissão retida', money(s.commission_held),
+      s.next_release_at ? `Próxima liberação em ${date(s.next_release_at)}` : `Fica retida ${s.hold_days} dias após o pagamento`],
     ['Comissão prevista', money(s.commission_pending), 'Pedidos aguardando pagamento (estimativa)'],
-    ['Pedidos', String(s.orders_count), `${s.paid_count} pago${Number(s.paid_count) === 1 ? '' : 's'}`],
-    ['Sua taxa', pct(s.commission_pct), 'Sobre o valor dos produtos'],
+    ['Pedidos', String(s.orders_count), `${s.paid_count} pago${Number(s.paid_count) === 1 ? '' : 's'} · taxa de ${pct(s.commission_pct)}`],
   ];
   $('[data-cards]').innerHTML = cards.map(([label, value, hint, hot]) => `
     <div class="aff-card${hot ? ' is-hot' : ''}">
@@ -65,7 +72,7 @@ function renderOrders() {
     const [label, cls] = (STATUS[o.status] || [o.status, 'is-wait']).map(esc);
     return `<li class="aff-order">
       <span class="aff-order-top"><b>#${esc(o.ref_short)}</b><span class="order-status ${cls}">${label}</span></span>
-      <span class="aff-order-date muted small">${date(o.created_at)}</span>
+      <span class="aff-order-date muted small">${date(o.created_at)}${o.status === 'retida' && o.release_at ? ` · libera em ${esc(date(o.release_at))}` : ''}</span>
       <span class="aff-order-vals">
         <span><small class="muted">Produtos</small>${money(o.subtotal)}</span>
         <span class="${o.status === 'cancelado' ? 'is-void' : ''}"><small class="muted">${o.projected ? 'Comissão prevista' : 'Comissão'}</small>${o.status === 'cancelado' ? money(0) : esc(money(o.commission))}</span>

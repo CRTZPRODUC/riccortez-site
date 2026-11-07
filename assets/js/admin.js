@@ -1,7 +1,11 @@
 // Store admin panel: every order with the buyer's data, payment and shipping status, live.
-// Sign-in is Supabase Auth; only accounts with app_metadata.role = "admin" get any rows back
-// (row level security, supabase/migrations/*_orders_admin.sql). Admins can change only the
+// Sign-in is Supabase Auth plus a TOTP code (MFA): only accounts with app_metadata.role = "admin"
+// and an aal2 session get any rows back (row level security, public.is_admin(),
+// supabase/migrations/*_orders_admin.sql and *_integrity.sql). Admins can change only the
 // shipping fields here; marking an order as shipped e-mails the customer the tracking code.
+// The "Afiliados" tab manages referral partners and shows their commissions; "Integridade"
+// runs the Edge Function `verificar` (order seals, commissions, audit log hash chain).
+// Every value from the server goes through esc() before it is placed in HTML.
 import { supa, captchaToken } from './auth.js';
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -102,16 +106,30 @@ function matches(o) {
   if (!query) return true;
   const c = o.customer || {};
   const a = o.address || {};
-  const hay = [o.code, c.name, c.email, c.phone, digits(c.cpf), a.city, a.state, o.tracking_code].join(' ').toLowerCase();
+  const hay = [o.code, c.name, c.email, c.phone, digits(c.cpf), a.city, a.state, o.tracking_code, o.ref].join(' ').toLowerCase();
   return query.split(/\s+/).every((w) => hay.includes(w) || (digits(w) && hay.includes(digits(w))));
+}
+
+// Affiliate commission of one order: the snapshot stored when it was paid (with the seal state),
+// or, while it waits for payment, a note that it is computed at payment time.
+function commissionHtml(o) {
+  if (o.paid_at) {
+    const seal = o.seal ? '<span class="adm-badge is-ok" title="Valores assinados no pagamento">Selado</span>'
+      : '<span class="adm-badge is-bad" title="Pedido pago sem selo: rode a verificação de integridade">Sem selo</span>';
+    const aff = o.affiliate_code
+      ? `Afiliado ${esc(o.affiliate_code)} · comissão ${esc(money(o.commission))} (${esc(pct(o.commission_pct))})`
+      : (o.ref ? 'Indicação sem afiliado ativo no pagamento: sem comissão' : '');
+    return `${aff ? `<p class="adm-muted">${aff}</p>` : ''}<p>${seal}</p>`;
+  }
+  return o.ref && o.status === 'pending' ? '<p class="adm-muted">Comissão calculada quando o pedido for pago.</p>' : '';
 }
 
 function orderHtml(o, open) {
   const c = o.customer || {};
   const a = o.address || {};
   const s = o.shipping || {};
-  const [payLabel, payCls] = PAY[o.status] || [o.status, 'is-mute'];
-  const [shipLabel, shipCls] = SHIP[o.shipping_status] || [o.shipping_status, 'is-mute'];
+  const [payLabel, payCls] = (PAY[o.status] || [o.status, 'is-mute']).map(esc);
+  const [shipLabel, shipCls] = (SHIP[o.shipping_status] || [o.shipping_status, 'is-mute']).map(esc);
   const paid = o.paid_amount_cents != null ? o.paid_amount_cents / 100 : null;
   const items = (o.items || []).map((i) => `<li><span>${Number(i.qty)} × ${esc(i.name)}</span><span>${money(i.price * i.qty)}</span></li>`).join('');
   const addrText = `${a.street}, ${a.number}${a.complement ? ` - ${a.complement}` : ''}\n${a.neighborhood} - ${a.city}/${a.state}\nCEP ${cep(a.cep)}`;
@@ -122,7 +140,7 @@ function orderHtml(o, open) {
     <span class="adm-code">${esc(o.code)}</span>
     <span class="adm-sum-total">${money(paid ?? o.total)}</span>
     <span class="adm-sum-meta">${esc(c.name)} · ${esc(a.city)}/${esc(a.state)} · ${when(o.created_at)}</span>
-    <span class="adm-badges"><span class="adm-badge ${payCls}">${payLabel}</span>${o.status === 'paid' ? `<span class="adm-badge ${shipCls}">${shipLabel}</span>` : ''}</span>
+    <span class="adm-badges">${o.ref ? `<span class="adm-badge is-ref" title="Código de indicação">Ref ${esc(o.ref)}</span>` : ''}<span class="adm-badge ${payCls}">${payLabel}</span>${o.status === 'paid' ? `<span class="adm-badge ${shipCls}">${shipLabel}</span>` : ''}</span>
   </summary>
   <div class="adm-body">
     <div>
@@ -153,6 +171,7 @@ function orderHtml(o, open) {
       ${o.receipt_url ? `<p><a href="${esc(o.receipt_url)}" target="_blank" rel="noopener">Comprovante</a></p>` : ''}
       ${o.transaction_nsu ? `<p class="adm-muted">NSU ${esc(o.transaction_nsu)}</p>` : ''}
       ${o.ref ? `<p class="adm-muted">Indicação: ${esc(o.ref)}</p>` : ''}
+      ${commissionHtml(o)}
       <p class="adm-muted">Criado em ${when(o.created_at)}</p>
     </div>
     ${o.status === 'paid' ? `<form class="adm-ship" data-ship>
@@ -223,11 +242,26 @@ function live() {
 // ---------- events ----------
 
 document.addEventListener('click', (e) => {
+  const tab = e.target.closest('[data-view-tab]');
+  if (tab) { showView(tab.dataset.viewTab); return; }
+  const edit = e.target.closest('[data-aff-edit]');
+  if (edit) {
+    const a = affiliates.find((x) => x.code === edit.dataset.affEdit);
+    if (a) {
+      affForm.email.value = a.email || '';
+      affForm.code.value = a.code;
+      affForm.name.value = a.name;
+      affMsg.textContent = '';
+      affForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      affForm.name.focus({ preventScroll: true });
+    }
+    return;
+  }
   const chip = e.target.closest('[data-filter]');
   if (chip) { filter = chip.dataset.filter; render(); return; }
   const copy = e.target.closest('[data-copy]');
   if (copy) {
-    navigator.clipboard.writeText(copy.dataset.copy).then(() => toast('Dados copiados'), () => toast('Não deu para copiar'));
+    navigator.clipboard.writeText(copy.dataset.copy).then(() => toast('Copiado'), () => toast('Não deu para copiar'));
   }
 });
 
@@ -255,6 +289,155 @@ document.addEventListener('submit', async (e) => {
   toast(status === 'shipped' && order.shipping_status === 'shipped' ? 'Salvo. O cliente vai receber o e-mail de envio.' : 'Salvo');
 });
 
+// ---------- affiliates ----------
+// Commission totals come from admin_affiliates_report(); the form and the active switch call
+// admin_upsert_affiliate() and admin_set_affiliate_active(). All three check is_admin() in the
+// database (supabase/migrations/*_affiliates.sql).
+
+let affiliates = [];
+const affForm = $('[data-aff-form]');
+const affMsg = $('[data-aff-msg]');
+const pct = (n) => `${Number(n).toLocaleString('pt-BR', { maximumFractionDigits: 2 })}%`;
+
+function showView(view) {
+  document.querySelectorAll('[data-view-tab]').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.viewTab === view)));
+  document.querySelectorAll('[data-view]').forEach((v) => { v.hidden = v.dataset.view !== view; });
+  if (view === 'affiliates') loadAffiliates();
+}
+
+// ---------- integrity ----------
+// The Edge Function `verificar` recomputes every paid order's seal (HMAC with a key kept outside
+// the database) and commission, and walks the whole audit log hash chain. The head hash it
+// returns is worth saving outside the system: pasting it back later proves that the history up
+// to that point was not rewritten.
+
+const PROBLEM = {
+  missing_seal: 'Pedido pago sem selo',
+  seal_mismatch: 'Selo não confere: valores alterados depois do pagamento',
+  commission_mismatch: 'Comissão diferente da conta',
+  affiliate_mismatch: 'Afiliado diferente da indicação do pedido',
+  seal_key_missing: 'Chave do selo não configurada no servidor',
+  invalid_data: 'Dados inválidos',
+};
+const intForm = $('[data-integrity]');
+const intOut = $('[data-integrity-out]');
+
+function intMessage(text, cls = 'is-bad') {
+  intOut.className = `adm-integrity-out ${cls}`;
+  intOut.innerHTML = `<p>${esc(text)}</p>`;
+}
+
+function renderIntegrity(r) {
+  const bad = [];
+  if (!r.seal_key_configured) bad.push('<li>Chave do selo (ORDER_SEAL_SECRET) não configurada no servidor: os selos não puderam ser conferidos.</li>');
+  for (const f of r.orders?.failed ?? []) {
+    bad.push(`<li><b>${esc(f.code)}</b>: ${(f.problems ?? []).map((p) => `${esc(PROBLEM[p.code] || p.code)} (${esc(p.detail)})`).join('; ')}</li>`);
+  }
+  if (r.chain && !r.chain.ok) bad.push(`<li>Histórico quebrado no registro #${esc(r.chain.break_at)}: ${esc(r.chain.problem)}</li>`);
+  const cp = r.chain?.checkpoint;
+  if (cp && !cp.ok) bad.push(`<li>O código guardado (registro #${esc(cp.id)}) não confere: ${esc(cp.problem)}</li>`);
+  const head = r.chain?.head_hash ? `#${r.chain.head_id} ${r.chain.head_hash}` : '';
+  intOut.className = `adm-integrity-out ${r.ok ? 'is-ok' : 'is-bad'}`;
+  intOut.innerHTML = `
+    <h3>${r.ok ? 'Tudo íntegro' : 'Problemas encontrados'}</h3>
+    ${bad.length ? `<ul>${bad.join('')}</ul>` : ''}
+    <p>${esc(r.orders?.checked ?? 0)} pedido(s) pago(s) conferido(s) · ${esc(r.chain?.entries ?? 0)} registro(s) no histórico${cp?.ok ? ' · código guardado confere' : ''} · ${esc(when(r.checked_at))}</p>
+    ${head ? `<p>Código do histórico agora:</p>
+    <code class="adm-hash">${esc(head)}</code>
+    <p><button class="adm-copy" type="button" data-copy="${esc(head)}">Copiar código</button></p>
+    <p>Guarde este código fora do sistema (por exemplo, mande para o seu próprio e-mail, com a data). Para provar depois que o histórico até aqui não foi reescrito, cole o código no campo acima e verifique de novo.</p>` : ''}`;
+}
+
+intForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const raw = intForm.checkpoint.value.trim();
+  const m = /#?\s*(\d+)\D+([0-9a-f]{64})/i.exec(raw);
+  if (raw && !m) { intMessage('Código guardado inválido. Cole no formato "#número hash", como foi copiado.'); return; }
+  const btn = $('button[type=submit]', intForm);
+  btn.disabled = true;
+  intMessage('Verificando...', '');
+  try {
+    const body = m ? { checkpoint_id: Number(m[1]), checkpoint_hash: m[2].toLowerCase() } : {};
+    const { data, error } = await (await supa()).functions.invoke('verificar', { body });
+    if (error) {
+      const status = error.context?.status;
+      intMessage(status === 401 || status === 403
+        ? 'Sem permissão. Saia e entre de novo com o código do app autenticador.'
+        : 'Não deu para verificar agora. Tente de novo.');
+      return;
+    }
+    renderIntegrity(data);
+  } catch {
+    intMessage('Sem conexão com o servidor.');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+function renderAffiliates() {
+  const box = $('[data-aff-list]');
+  if (!affiliates.length) { box.innerHTML = '<p class="adm-muted">Nenhum afiliado cadastrado.</p>'; return; }
+  box.innerHTML = `<div class="adm-table-wrap"><table class="adm-table">
+    <thead><tr><th>Afiliado</th><th>Pedidos</th><th>Vendas pagas</th><th>Comissão a pagar</th><th>Comissão prevista</th><th>Ativo</th></tr></thead>
+    <tbody>${affiliates.map((a) => `<tr class="${a.active ? '' : 'is-off'}">
+      <td data-th="Afiliado"><b>${esc(a.code)}</b> · ${esc(a.name)}<br><span class="adm-muted">${esc(a.email || 'conta removida')} · ${pct(a.commission_pct)}</span>
+        <br><button class="adm-copy" type="button" data-copy="https://riccortez.com/?ref=${esc(encodeURIComponent(a.code))}">Copiar link</button>
+        <button class="adm-copy" type="button" data-aff-edit="${esc(a.code)}">Editar</button></td>
+      <td data-th="Pedidos"><span>${Number(a.orders_count)} <span class="adm-muted">(${Number(a.paid_count)} pagos)</span></span></td>
+      <td data-th="Vendas pagas">${money(a.paid_sales)}</td>
+      <td data-th="Comissão a pagar"><b class="is-wait">${money(a.commission_paid)}</b></td>
+      <td data-th="Comissão prevista"><span class="adm-muted" title="Projeção com a taxa atual; o valor fica fixo quando o pedido é pago">${money(a.commission_pending)}</span></td>
+      <td data-th="Ativo"><label class="adm-switch"><input type="checkbox" data-aff-active="${esc(a.code)}"${a.active ? ' checked' : ''}><span></span><em>${a.active ? 'Ativo' : 'Inativo'}</em></label></td>
+    </tr>`).join('')}</tbody></table></div>
+    <p class="adm-muted adm-aff-note">Comissão sobre o valor dos produtos (sem frete). "A pagar" soma a comissão gravada em cada pedido no momento do pagamento (não muda se a taxa mudar depois). "Prevista" é só uma projeção dos pedidos que aguardam pagamento, com a taxa atual. Cancelados e reembolsados não contam.</p>`;
+}
+
+async function loadAffiliates() {
+  const { data, error } = await (await supa()).rpc('admin_affiliates_report');
+  if (error) { $('[data-aff-list]').innerHTML = '<p class="adm-msg">Não conseguimos carregar os afiliados. Recarregue a página.</p>'; return; }
+  affiliates = data || [];
+  renderAffiliates();
+}
+
+function affError(err) {
+  const m = String(err?.message || '');
+  if (/user not found/i.test(m)) return 'Não existe conta com esse e-mail. A pessoa precisa criar a conta em conta.html e confirmar o e-mail.';
+  if (/code in use|duplicate|unique/i.test(m)) return 'Esse código já é de outro afiliado.';
+  if (/invalid code/i.test(m)) return 'Código inválido: use de 2 a 40 letras, números, _ ou -.';
+  if (/has paid orders and cannot change/i.test(m)) return 'Esse afiliado já tem pedidos pagos com o código atual, então o código não pode mudar.';
+  if (/not allowed/i.test(m)) return 'Sem permissão. Saia e entre de novo com o código do app autenticador.';
+  return 'Não salvou. Tente de novo.';
+}
+
+affForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  affMsg.classList.remove('is-ok');
+  const code = affForm.code.value.trim().toUpperCase();
+  affForm.code.value = code;
+  if (!affForm.checkValidity()) { affMsg.textContent = 'Preencha e-mail, código (2 a 40 letras, números, _ ou -) e nome.'; return; }
+  const btn = $('button[type=submit]', affForm);
+  btn.disabled = true;
+  const { error } = await (await supa()).rpc('admin_upsert_affiliate', {
+    p_email: affForm.email.value.trim(), p_code: code, p_name: affForm.name.value.trim(),
+  });
+  btn.disabled = false;
+  if (error) { affMsg.textContent = affError(error); return; }
+  affMsg.classList.add('is-ok');
+  affMsg.textContent = `Afiliado ${code} salvo. Link: https://riccortez.com/?ref=${code}`;
+  affForm.reset();
+  loadAffiliates();
+});
+
+document.addEventListener('change', async (e) => {
+  const box = e.target.closest('[data-aff-active]');
+  if (!box) return;
+  box.disabled = true;
+  const { error } = await (await supa()).rpc('admin_set_affiliate_active', { p_code: box.dataset.affActive, p_active: box.checked });
+  if (error) { box.checked = !box.checked; box.disabled = false; toast('Não salvou. Tente de novo.'); return; }
+  toast(box.checked ? `${box.dataset.affActive} ativado` : `${box.dataset.affActive} desativado`);
+  loadAffiliates();
+});
+
 // ---------- auth ----------
 
 const loginForm = $('[data-login]');
@@ -262,6 +445,7 @@ const loginMsg = $('[data-login-msg]');
 
 function showLogin(message = '') {
   loginForm.hidden = false;
+  mfaForm.hidden = true;
   $('[data-panel]').hidden = true;
   $('[data-signout]').hidden = true;
   $('[data-user]').textContent = '';
@@ -269,13 +453,79 @@ function showLogin(message = '') {
   if (channel) { supa().then((s) => s.removeChannel(channel)); channel = null; }
 }
 
+// ---------- MFA (TOTP) ----------
+// is_admin() needs an aal2 session, so after the password the admin types a code from an
+// authenticator app. Without a verified TOTP factor the form first enrolls one (QR code).
+
+const mfaForm = $('[data-mfa]');
+const mfaMsg = $('[data-mfa-msg]');
+let mfaFactor = null;
+
+async function showMfa() {
+  const s = await supa();
+  loginForm.hidden = true;
+  $('[data-panel]').hidden = true;
+  $('[data-signout]').hidden = true;
+  mfaForm.hidden = false;
+  mfaForm.reset();
+  mfaMsg.textContent = '';
+  mfaFactor = null;
+  const { data, error } = await s.auth.mfa.listFactors();
+  if (error) { mfaMsg.textContent = 'Não deu para carregar a verificação. Recarregue a página.'; return; }
+  const verified = (data.totp ?? []).find((f) => f.status === 'verified');
+  $('[data-mfa-enroll]').hidden = !!verified;
+  $('[data-mfa-ask]').hidden = !verified;
+  if (verified) { mfaFactor = verified.id; mfaForm.code.focus(); return; }
+  // Drop half-finished enrollments (page reloaded before the code was confirmed).
+  for (const f of (data.all ?? []).filter((x) => x.factor_type === 'totp' && x.status !== 'verified')) {
+    await s.auth.mfa.unenroll({ factorId: f.id }).catch(() => {});
+  }
+  const { data: en, error: enErr } = await s.auth.mfa.enroll({
+    factorType: 'totp', friendlyName: `Painel ${new Date().toISOString().slice(0, 16)}`,
+  });
+  if (enErr) { mfaMsg.textContent = 'Não deu para gerar o QR code. Recarregue a página.'; return; }
+  mfaFactor = en.id;
+  $('[data-mfa-qr]').src = en.totp.qr_code;   // data: URI from Supabase, set as a property
+  $('[data-mfa-secret]').textContent = en.totp.secret;
+  mfaForm.code.focus();
+}
+
+mfaForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const code = mfaForm.code.value.replace(/\D/g, '');
+  if (code.length !== 6 || !mfaFactor) { mfaMsg.textContent = 'Digite os 6 dígitos do app.'; return; }
+  const btn = $('button[type=submit]', mfaForm);
+  btn.disabled = true;
+  mfaMsg.textContent = '';
+  try {
+    const s = await supa();
+    const { error } = await s.auth.mfa.challengeAndVerify({ factorId: mfaFactor, code });
+    if (error) { mfaMsg.textContent = 'Código incorreto ou expirado. Confira o relógio do celular e tente o próximo código.'; return; }
+    const { data } = await s.auth.getUser();
+    await enter(data.user);
+  } catch {
+    mfaMsg.textContent = 'Sem conexão com o servidor.';
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+$('[data-mfa-cancel]').addEventListener('click', async () => {
+  await (await supa()).auth.signOut().catch(() => {});
+  showLogin();
+});
+
 async function enter(user) {
   if (user?.app_metadata?.role !== 'admin') {
     await (await supa()).auth.signOut().catch(() => {});
     showLogin('Esta conta não tem acesso ao painel.');
     return;
   }
+  const { data: aal, error } = await (await supa()).auth.mfa.getAuthenticatorAssuranceLevel();
+  if (error) { showLogin('Não deu para conferir a verificação em duas etapas. Recarregue a página.'); return; }
+  if (aal.currentLevel !== 'aal2') { await showMfa(); return; }
   loginForm.hidden = true;
+  mfaForm.hidden = true;
   $('[data-panel]').hidden = false;
   $('[data-signout]').hidden = false;
   $('[data-user]').textContent = user.email;

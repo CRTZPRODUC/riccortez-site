@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Painel · Ric Cortez</title>
   <!-- Store admin panel. Access needs a Supabase Auth account flagged as admin
-       (supabase/migrations/*_orders_admin.sql); the data is protected by row level security,
-       not by this page. -->
+       (supabase/migrations/*_orders_admin.sql) that passed a TOTP (authenticator app) check:
+       public.is_admin() requires an aal2 session (*_integrity.sql). The data is protected by
+       row level security, not by this page. -->
   <meta name="robots" content="noindex, nofollow">
   <meta name="referrer" content="no-referrer">
   <meta name="theme-color" content="#0a0a0a">
@@ -37,15 +38,67 @@
       <p class="adm-msg" data-login-msg role="alert"></p>
     </form>
 
-    <section data-panel hidden>
-      <div class="adm-stats" data-stats></div>
+    <!-- Second step: TOTP code from an authenticator app (Google Authenticator, Authy, 1Password...).
+         First access: shows a QR code to enroll the app. -->
+    <form class="adm-login adm-mfa" data-mfa hidden novalidate>
+      <h1>Verificação em duas etapas</h1>
+      <div data-mfa-enroll hidden>
+        <p class="adm-muted">Primeiro acesso com verificação: escaneie o QR code com um app autenticador (Google Authenticator, Authy, 1Password...) e digite o código de 6 dígitos que aparecer.</p>
+        <img class="adm-qr" data-mfa-qr alt="QR code para o app autenticador" width="180" height="180">
+        <p class="adm-muted">Sem câmera? Digite esta chave no app: <code class="adm-secret" data-mfa-secret></code></p>
+      </div>
+      <p class="adm-muted" data-mfa-ask hidden>Digite o código de 6 dígitos do seu app autenticador.</p>
+      <label>Código<input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required></label>
+      <button class="adm-btn" type="submit">Confirmar</button>
+      <button class="adm-btn adm-btn--ghost" type="button" data-mfa-cancel>Sair</button>
+      <p class="adm-msg" data-mfa-msg role="alert"></p>
+    </form>
 
-      <div class="adm-tools">
-        <div class="adm-chips" role="tablist" data-filters></div>
-        <input class="adm-search" type="search" placeholder="Buscar por pedido, nome, e-mail, CPF ou cidade" data-search aria-label="Buscar pedidos">
+    <section data-panel hidden>
+      <nav class="adm-tabs" role="tablist" aria-label="Seções do painel">
+        <button class="adm-tab" type="button" role="tab" data-view-tab="orders" aria-selected="true">Pedidos</button>
+        <button class="adm-tab" type="button" role="tab" data-view-tab="affiliates" aria-selected="false">Afiliados</button>
+        <button class="adm-tab" type="button" role="tab" data-view-tab="integrity" aria-selected="false">Integridade</button>
+      </nav>
+
+      <div data-view="orders">
+        <div class="adm-stats" data-stats></div>
+
+        <div class="adm-tools">
+          <div class="adm-chips" role="tablist" data-filters></div>
+          <input class="adm-search" type="search" placeholder="Buscar por pedido, nome, e-mail, CPF, cidade ou indicação" data-search aria-label="Buscar pedidos">
+        </div>
+
+        <div data-list class="adm-list"><p class="adm-muted">Carregando...</p></div>
       </div>
 
-      <div data-list class="adm-list"><p class="adm-muted">Carregando...</p></div>
+      <!-- Affiliates: RPCs admin_upsert_affiliate, admin_set_affiliate_active and
+           admin_affiliates_report (supabase/migrations/*_affiliates.sql). -->
+      <div data-view="affiliates" hidden>
+        <form class="adm-aff-form" data-aff-form novalidate>
+          <h2>Cadastrar ou editar afiliado</h2>
+          <p class="adm-muted">A pessoa precisa já ter conta confirmada na loja (conta.html) com este e-mail. Se o e-mail já for afiliado, o código e o nome são atualizados.</p>
+          <label>E-mail da conta<input type="email" name="email" required autocomplete="off"></label>
+          <label>Código<input type="text" name="code" required pattern="[A-Za-z0-9_\-]{2,40}" maxlength="40" autocomplete="off" placeholder="Ex.: JOAO10"></label>
+          <label>Nome<input type="text" name="name" required maxlength="120" autocomplete="off"></label>
+          <button class="adm-btn adm-btn--sm" type="submit">Salvar afiliado</button>
+          <p class="adm-msg" data-aff-msg role="status"></p>
+        </form>
+
+        <div data-aff-list class="adm-aff-list"><p class="adm-muted">Carregando...</p></div>
+      </div>
+
+      <!-- Integrity: Edge Function `verificar` re-checks every order seal, every commission and
+           the hash-chained audit log (supabase/functions/verificar). -->
+      <div data-view="integrity" hidden>
+        <form class="adm-aff-form adm-integrity" data-integrity novalidate>
+          <h2>Verificar integridade</h2>
+          <p class="adm-muted">Confere o selo de cada pedido pago, a comissão de cada afiliado e o histórico de alterações. Qualquer valor mudado por fora do sistema aparece aqui.</p>
+          <label>Conferir um código guardado (opcional)<input type="text" name="checkpoint" autocomplete="off" placeholder="Ex.: #42 3f9a...e1"></label>
+          <button class="adm-btn adm-btn--sm" type="submit">Verificar integridade</button>
+        </form>
+        <div data-integrity-out class="adm-integrity-out" aria-live="polite"></div>
+      </div>
     </section>
   </main>
 

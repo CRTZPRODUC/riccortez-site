@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel do afiliado · Ric Cortez Pickups</title>
+  <meta name="description" content="Seu link de afiliado, suas vendas e suas comissões na Ric Cortez Pickups.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a0a0a'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-style='italic' font-size='20' text-anchor='middle' fill='%23d4a437'%3ER%3C/text%3E%3C/svg%3E">
+  <script>try{var t=localStorage.getItem('rc-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allura&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/pages.css">
+  <script type="module" src="assets/js/affiliate.js"></script>
+</head>
+<body>
+  <div data-header></div>
+
+  <!--
+    Affiliate dashboard (assets/js/affiliate.js). Data comes only from the database functions
+    my_affiliate_summary() and my_affiliate_orders() (supabase/migrations/*_affiliates.sql):
+    values and a short reference per order, never the buyer's data.
+  -->
+  <main id="main" tabindex="-1" class="aff">
+    <div class="container">
+      <header class="aff-head">
+        <span class="eyebrow">Programa de afiliados</span>
+        <h1>Suas <em>indicações</em>.</h1>
+      </header>
+
+      <div class="aff-state" data-state><p class="muted">Carregando...</p></div>
+
+      <div data-aff hidden>
+        <section class="aff-link" aria-labelledby="aff-link-h">
+          <h2 id="aff-link-h">Seu link</h2>
+          <p class="muted small">Compartilhe este link. As compras feitas por quem chegar por ele em até <span data-ref-days>30</span> dias contam para você.</p>
+          <div class="aff-link-row">
+            <input class="aff-link-input" type="text" readonly data-link aria-label="Seu link de afiliado">
+            <button class="btn btn-primary" type="button" data-copy-link>Copiar link</button>
+          </div>
+        </section>
+
+        <div class="aff-cards" data-cards></div>
+
+        <section aria-labelledby="aff-orders-h">
+          <div class="aff-orders-top">
+            <h2 id="aff-orders-h">Pedidos com seu link</h2>
+            <div class="aff-filters" role="tablist" aria-label="Filtrar pedidos" data-filters></div>
+          </div>
+          <div data-orders aria-live="polite"></div>
+          <p class="muted small aff-foot">A comissão é calculada sobre o valor dos produtos (sem o frete). Pedidos pagos entram em "a receber"; pedidos cancelados ou reembolsados não geram comissão.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <div data-footer></div>
+</body>
+</html>

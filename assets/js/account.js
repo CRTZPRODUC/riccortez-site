@@ -161,6 +161,20 @@ const STATUS = {
 };
 const date = (iso) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
 
+// Link to the affiliate dashboard, shown only when this account is an active affiliate.
+// my_affiliate_summary() returns no row for everyone else.
+async function showAffiliateLink() {
+  const link = $('[data-aff-link]');
+  link.hidden = true;
+  try {
+    const { data, error } = await (await supa()).rpc('my_affiliate_summary');
+    const aff = !error && data?.[0];
+    if (!aff) return;
+    link.innerHTML = `${icon('bolt', 20)}<span><b>Painel do afiliado</b><br><span class="muted small">Seu link ${esc(aff.code)}, vendas e comissões</span></span>${icon('arrow', 18)}`;
+    link.hidden = false;
+  } catch { /* not shown */ }
+}
+
 async function renderDash(user) {
   if (!user) { show('login'); return; }
   const name = String(user.user_metadata?.name || '').trim().split(/\s+/)[0];
@@ -168,6 +182,8 @@ async function renderDash(user) {
   $('[data-dash-email]').textContent = user.email || '';
   note(dash, '');
   show('dash');
+
+  showAffiliateLink();
 
   const box = $('[data-orders]');
   box.innerHTML = '<p class="muted">Carregando...</p>';

@@ -44,13 +44,15 @@ function render(o) {
   const items = o.items.map((i) => `<li>${i.qty} × ${esc(i.name)}</li>`).join('');
   const how = paid && o.capture_method
     ? `<p>${esc(METHOD[o.capture_method] || o.capture_method)}${o.installments > 1 ? ` em ${o.installments}x` : ''}.</p>` : '';
-  // Coupon: while pending it is Pix only (total is the card price); once paid by card its
-  // discount is 0 and the line is not shown.
+  // Coupon. Card-and-Pix coupon (BLACKGOLDPRO): already in total, Pix takes its usual percent.
+  // Pix-only coupon (its Pix link percent is above the store one): total is the card price and
+  // the coupon only lowers the Pix price; once paid by card its discount is 0 and the line hides.
   const cDisc = Number(o.coupon_discount) || 0;
-  const pendingCoupon = o.status === 'pending' && cDisc > 0;
+  const pixOnly = cDisc > 0 && Number(o.pix_link_percent) > Number(o.pix_discount_percent || 0);
+  const pendingCoupon = o.status === 'pending' && pixOnly;
   const coupon = o.coupon_code && cDisc > 0
     ? `<div class="sum-row coupon-row"><span>Cupom ${esc(o.coupon_code)}${pendingCoupon ? ' (no Pix)' : ''}</span><strong>− ${money(cDisc)}</strong></div>` : '';
-  const pixPrice = Math.round(Math.round((o.total - cDisc) * 100) * (100 - (o.pix_discount_percent || 0)) / 100) / 100;
+  const pixPrice = Math.round(Math.round((o.total - (pixOnly ? cDisc : 0)) * 100) * (100 - (o.pix_discount_percent || 0)) / 100) / 100;
   const head = {
     paid: ['co-ok', 'Pagamento confirmado!', 'Recebemos seu pedido e você vai receber as atualizações por e-mail. O prazo de entrega conta a partir de agora.'],
     pending: ['co-wait', 'Aguardando pagamento', 'Ainda não recebemos a confirmação. Pix e cartão costumam confirmar em poucos minutos: recarregue esta página daqui a pouco.'],

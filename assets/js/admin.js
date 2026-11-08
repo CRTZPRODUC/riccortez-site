@@ -143,6 +143,9 @@ function orderHtml(o, open) {
   const [payLabel, payCls] = (PAY[o.status] || [o.status, 'is-mute']).map(esc);
   const [shipLabel, shipCls] = (SHIP[o.shipping_status] || [o.shipping_status, 'is-mute']).map(esc);
   const paid = o.paid_amount_cents != null ? o.paid_amount_cents / 100 : null;
+  // Pix-only coupon orders fold the coupon into the Pix link percent; card-and-Pix ones
+  // (BLACKGOLDPRO) put it in the item prices, so total already has it.
+  const couponPixOnly = (x) => Number(x.pix_link_percent) > Number(x.pix_discount_percent || 0);
   const items = (o.items || []).map((i) => `<li><span>${Number(i.qty)} × ${esc(i.name)}</span><span>${money(i.price * i.qty)}</span></li>`).join('');
   const addrText = `${a.street}, ${a.number}${a.complement ? ` - ${a.complement}` : ''}\n${a.neighborhood} - ${a.city}/${a.state}\nCEP ${cep(a.cep)}`;
   const label = `${c.name}\nCPF ${cpf(c.cpf)}\nTel ${c.phone || ''}\n${addrText}`;
@@ -171,7 +174,7 @@ function orderHtml(o, open) {
       <ul class="adm-items">${items}</ul>
       <div class="adm-rows">
         <span>Produtos</span><span>${money(o.subtotal)}</span>
-        ${o.coupon_code ? `<span>Cupom ${esc(o.coupon_code)}${o.status === 'pending' ? ' (só no Pix)' : ''}</span><span>${Number(o.coupon_discount) > 0 ? `− ${money(o.coupon_discount)}` : 'não usado (cartão)'}</span>` : ''}
+        ${o.coupon_code ? `<span>Cupom ${esc(o.coupon_code)}${o.status === 'pending' && couponPixOnly(o) ? ' (só no Pix)' : ''}</span><span>${Number(o.coupon_discount) > 0 ? `− ${money(o.coupon_discount)}` : 'não usado (cartão)'}</span>` : ''}
         <span>Frete cobrado</span><span>${Number(o.shipping_price) > 0 ? money(o.shipping_price) : 'Grátis'}</span>
         <span class="tot">${paid != null ? 'Pago' : 'Total'}</span><span class="tot">${money(paid ?? o.total)}</span>
       </div>

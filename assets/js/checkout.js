@@ -18,10 +18,12 @@ let selected = null;       // chosen service id
 const lines = () => cart.items.map((i) => ({ p: byId.get(i.id), qty: i.qty })).filter((l) => l.p);
 const subtotal = () => lines().reduce((s, l) => s + l.p.price * l.qty, 0);
 const itemsBody = () => cart.items.map(({ id, qty }) => ({ id, qty }));
-// Payment chosen here. InfinitePay still offers both on its page; a Pix-only coupon is folded
-// into the Pix discount of the link, so paying by card there costs the normal card price.
+// Payment chosen here. InfinitePay still offers both on its page. A card-and-Pix coupon
+// (BLACKGOLDPRO) is in the item prices of the link, so the choice does not change it; a Pix-only
+// coupon is folded into the Pix discount, so paying by card there costs the normal card price.
 const method = () => (form.payment?.value === 'card' ? 'card' : 'pix');
-// Coupon discount that applies to this order (0 on the card for a Pix-only coupon).
+// Coupon discount that applies to this order (0 on the card for a Pix-only coupon, 0 under the
+// coupon minimum).
 const couponNow = () => {
   const c = coupon.get();
   if (!c || (c.pix_only && method() === 'card')) return 0;
@@ -55,9 +57,10 @@ function renderSummary() {
   $('[data-co-subtotal]').textContent = money(sub);
   $('[data-co-coupon]').innerHTML = couponBlock(ls, method());
   const cDisc = couponNow();
+  const pixOnly = !!coupon.get()?.pix_only;
   $('[data-co-coupon-row]').hidden = !(cDisc > 0);
   if (cDisc > 0) {
-    $('[data-co-coupon-label]').textContent = `Cupom ${coupon.get().code} (no Pix)`;
+    $('[data-co-coupon-label]').textContent = `Cupom ${coupon.get().code}${pixOnly ? ' (no Pix)' : ''}`;
     $('[data-co-coupon-val]').textContent = `− ${money(cDisc)}`;
   }
 
@@ -68,21 +71,24 @@ function renderSummary() {
   shipEl.textContent = opt ? (opt.price > 0 ? money(opt.price) : 'Grátis') : 'Informe o CEP';
   shipEl.classList.toggle('co-ship-free', !!opt && opt.price === 0);
   shipEl.classList.toggle('muted', !opt);
-  const total = sub + (opt ? opt.price : 0);
-  // With a coupon the "Total" row is the card price and the Pix row has the coupon too.
-  $('[data-co-total]').previousElementSibling.textContent = cDisc > 0 ? 'Total no cartão' : 'Total';
+  // Card-and-Pix coupon: "Total" already has the coupon (card and Pix). Pix-only coupon: "Total"
+  // is the card price and only the Pix row has the coupon.
+  const cardSub = pixOnly ? sub : Math.round((sub - cDisc) * 100) / 100;
+  const total = cardSub + (opt ? opt.price : 0);
+  const pixBase = Math.round((sub - cDisc + (opt ? opt.price : 0)) * 100);
+  $('[data-co-total]').previousElementSibling.textContent = cDisc > 0 && pixOnly ? 'Total no cartão' : 'Total';
   $('[data-co-total]').textContent = money(total);
   // InfinitePay applies the Pix discount to the whole payment, shipping included (the coupon
   // only to the products).
   const pixPct = CONFIG.PIX_DISCOUNT_PERCENT;
   $('[data-co-pix-row]').hidden = !(pixPct > 0 || cDisc > 0);
   if (pixPct > 0 || cDisc > 0) {
-    $('[data-co-pix-label]').textContent = cDisc > 0 ? `No Pix (cupom + ${pixPct}% de desconto)` : `No Pix (${pixPct}% de desconto)`;
-    $('[data-co-pix]').textContent = money(Math.round(Math.round((total - cDisc) * 100) * (100 - pixPct) / 100) / 100);
+    $('[data-co-pix-label]').textContent = cDisc > 0 && pixOnly ? `No Pix (cupom + ${pixPct}% de desconto)` : `No Pix (${pixPct}% de desconto)`;
+    $('[data-co-pix]').textContent = money(Math.round(pixBase * (100 - pixPct) / 100) / 100);
   }
 
-  const n = interestFree(sub);
-  const next = CONFIG.INTEREST_FREE_TIERS.find((t) => sub < t.min);
+  const n = interestFree(cardSub);
+  const next = CONFIG.INTEREST_FREE_TIERS.find((t) => cardSub < t.min);
   $('[data-co-inst]').innerHTML = (n > 1
     ? `Parcele em até <b>${n}x sem juros</b> no cartão, ou em até ${CONFIG.MAX_INSTALLMENTS}x com juros.`
     : `Cartão em até ${CONFIG.MAX_INSTALLMENTS}x com juros, ou Pix à vista.`)

@@ -180,10 +180,14 @@ export function getRef() {
 /* ------------------------------------------------------------------- coupon */
 
 // Store coupon typed by the customer (e.g. BLACKGOLDPRO). Kept in localStorage `rc_coupon` as
-// { code, percent, ends_at, pix_only }. Validated by the database function coupon_quote (public,
-// via PostgREST); the `checkout` function checks it again and the order trigger has the last word.
+// { code, percent, ends_at, pix_only, min_subtotal }. Validated by the database function
+// coupon_quote (public, via PostgREST); the `checkout` function checks it again and the order
+// trigger has the last word.
 // Rule: each item costs the lower of its own price and its full price minus the coupon percent
-// (never both). Pix-only coupons are worth nothing on the card. Shipping is never discounted.
+// (never both). min_subtotal: the products at their current prices (before the coupon, the Pix
+// discount and shipping) must reach it, or the coupon gives nothing. Coupons with pix_only = false
+// (BLACKGOLDPRO) count on card and Pix; Pix-only ones are worth nothing on the card. Shipping is
+// never discounted.
 // Note: `?cupom=` in the URL is the affiliate code (see captureRefFromUrl), not this coupon.
 const COUPON_KEY = 'rc_coupon';
 const couponListeners = new Set();
@@ -195,13 +199,27 @@ export const COUPON_REASONS = {
   expired: 'Este cupom expirou.',
   sold_out: 'Este cupom esgotou: todos os usos foram aproveitados.',
   pix_only: 'Cupom válido só no Pix.',
-  no_effect: 'Os produtos do carrinho já têm desconto igual ou maior que o do cupom.',
+  min_subtotal: 'Cupom válido para compras a partir de R$ 250,00.',
+  no_effect: 'Você já está com o melhor desconto.',
 };
+
+// Products subtotal at current prices, the base of the coupon minimum.
+export const couponSubtotal = (lines) =>
+  lines.reduce((s, { p, qty }) => s + Math.round((Number(p.price) || 0) * 100) * qty, 0) / 100;
+
+// "Cupom válido para compras a partir de R$ X. Faltam R$ Y." (null when the minimum is reached).
+export function couponMinText(lines, c = coupon.get()) {
+  const min = Number(c?.min_subtotal) || 0;
+  const sub = couponSubtotal(lines);
+  if (!min || sub >= min) return null;
+  return `Cupom válido para compras a partir de ${money(min)}. Faltam ${money(min - sub)}.`;
+}
 
 export const coupon = {
   get() {
     const c = store.get(COUPON_KEY);
-    if (!c || !c.code || !c.percent) return null;
+    // Saved before min_subtotal existed (Pix-only version): ask for the code again.
+    if (!c || !c.code || !c.percent || !('min_subtotal' in c)) return null;
     if (c.ends_at && Date.now() > Date.parse(c.ends_at)) { store.del(COUPON_KEY); return null; }
     return c;
   },
@@ -221,9 +239,10 @@ export function couponUnit(p, percent) {
   return Math.min(price, Math.round(Math.round(regular * 100) * (100 - percent) / 100) / 100);
 }
 
-// Discount of the coupon on cart lines [{ p, qty }] (0 when it changes nothing).
+// Discount of the coupon on cart lines [{ p, qty }] (0 when it changes nothing or the cart is
+// under the minimum).
 export function couponDiscount(lines, c = coupon.get()) {
-  if (!c) return 0;
+  if (!c || couponMinText(lines, c)) return 0;
   return Math.round(lines.reduce((s, { p, qty }) => s + (Math.round(p.price * 100) - Math.round(couponUnit(p, c.percent) * 100)) * qty, 0)) / 100;
 }
 
@@ -264,9 +283,14 @@ export function couponBlock(lines, method = 'pix') {
   }
   const d = couponDiscount(lines, c);
   const card = c.pix_only && method === 'card';
-  const note = d <= 0
-    ? COUPON_REASONS.no_effect
-    : (card ? `${COUPON_REASONS.pix_only} No cartão o preço é o normal.` : `${money(d)} de desconto nos produtos${c.pix_only ? ', só no Pix' : ''}.`);
+  // Items already on sale for at least the coupon percent keep their own price.
+  const partial = lines.some(({ p }) => couponUnit(p, c.percent) >= Number(p.price));
+  const note = couponMinText(lines, c)
+    || (d <= 0
+      ? COUPON_REASONS.no_effect
+      : (card
+        ? `${COUPON_REASONS.pix_only} No cartão o preço é o normal.`
+        : `${money(d)} de desconto nos produtos${c.pix_only ? ', só no Pix' : ''}.${partial ? ' Itens em promoção mantêm o próprio desconto.' : ''}`));
   return `
     <div class="coupon-chip${d <= 0 || card ? ' is-off' : ''}">
       <span>${icon('check', 16)} Cupom <b>${esc(c.code)}</b></span>
@@ -292,9 +316,15 @@ export function bindCoupon(root, getLines) {
     msg.textContent = 'Validando...';
     try {
       const q = await checkCoupon(code, getLines(), 'pix');
-      if (q.ok || q.reason === 'no_effect') {
-        coupon.set({ code: q.code, percent: Number(q.percent), ends_at: q.ends_at, pix_only: !!q.pix_only });
-        toast(q.ok ? `Cupom ${q.code} aplicado.` : COUPON_REASONS.no_effect);
+      // A coupon that gives nothing yet (best discount already, or under the minimum) stays
+      // applied with a note; it starts counting when the cart qualifies.
+      if (q.ok || q.reason === 'no_effect' || q.reason === 'min_subtotal') {
+        const c = {
+          code: q.code, percent: Number(q.percent), ends_at: q.ends_at, pix_only: !!q.pix_only,
+          min_subtotal: q.min_subtotal != null ? Number(q.min_subtotal) : null,
+        };
+        coupon.set(c);
+        toast(q.ok ? `Cupom ${q.code} aplicado.` : (couponMinText(getLines(), c) || COUPON_REASONS.no_effect));
         return;
       }
       msg.textContent = COUPON_REASONS[q.reason] || COUPON_REASONS.not_found;
@@ -702,9 +732,10 @@ function renderCart() {
     .map((i) => ({ ...i, p: products.find((p) => p.id === i.id) }))
     .filter((l) => l.p);
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
-  // Coupon (Pix): the free-shipping threshold uses the products after the coupon, as in checkout.
+  // Coupon: the free-shipping threshold uses the products after the coupon, as in checkout.
   const cDisc = couponDiscount(lines);
   const base = subtotal - cDisc;
+  const pixOnly = !!coupon.get()?.pix_only;
 
   const ship = $('[data-ship]');
   const min = CONFIG.FREE_SHIPPING_MIN;
@@ -750,14 +781,16 @@ function renderCart() {
 
   const foot = $('[data-cart-foot]');
   if (!lines.length) { foot.innerHTML = ''; return; }
-  const n = interestFree(subtotal);
+  // A card-and-Pix coupon lowers the card price too, so the installments follow it.
+  const n = interestFree(pixOnly ? subtotal : base);
   const ref = getRef();
   foot.innerHTML = `
     ${ref ? `<p class="ref-note">${icon('check', 16)} Código <b>${esc(ref.code)}</b> será validado no checkout.</p>` : ''}
     <div class="cart-coupon">${couponBlock(lines, 'pix')}</div>
     <div class="sum-row"><span>Subtotal</span><strong>${money(subtotal)}</strong></div>
-    ${cDisc > 0 ? `<div class="sum-row coupon-row"><span>Cupom ${esc(coupon.get().code)} (no Pix)</span><strong>− ${money(cDisc)}</strong></div>` : ''}
-    <p class="muted small">${n > 1 ? `ou em até ${n}x sem juros` : `ou em até ${CONFIG.MAX_INSTALLMENTS}x no cartão`}${CONFIG.PIX_DISCOUNT_PERCENT > 0 ? ` · <b>${money(Math.round(base * (100 - CONFIG.PIX_DISCOUNT_PERCENT)) / 100)} no Pix</b>${cDisc > 0 ? ' com o cupom' : ''}` : ''}. Frete calculado no checkout.</p>
+    ${cDisc > 0 ? `<div class="sum-row coupon-row"><span>Cupom ${esc(coupon.get().code)}${pixOnly ? ' (no Pix)' : ''}</span><strong>− ${money(cDisc)}</strong></div>` : ''}
+    ${cDisc > 0 && !pixOnly ? `<div class="sum-row"><span>Total</span><strong>${money(base)}</strong></div>` : ''}
+    <p class="muted small">${n > 1 ? `ou em até ${n}x sem juros` : `ou em até ${CONFIG.MAX_INSTALLMENTS}x no cartão`}${CONFIG.PIX_DISCOUNT_PERCENT > 0 ? ` · <b>${money(Math.round(base * (100 - CONFIG.PIX_DISCOUNT_PERCENT)) / 100)} no Pix</b>${cDisc > 0 && pixOnly ? ' com o cupom' : ''}` : ''}. Frete calculado no checkout.</p>
     <a class="btn btn-primary btn-block" href="checkout.html">${icon('lock', 18)} Finalizar compra</a>
     <button class="btn btn-link btn-block" type="button" data-close>Continuar comprando</button>`;
 }

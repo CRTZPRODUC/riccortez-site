@@ -15,6 +15,13 @@ function setMeta(selector, attr, value) {
 }
 
 function applySeo(p, cat) {
+  // Hidden products (direct link only) stay out of search engines.
+  if (p.hidden) {
+    const m = document.createElement('meta');
+    m.name = 'robots';
+    m.content = 'noindex, nofollow';
+    document.head.appendChild(m);
+  }
   const desc = (p.desc || p.name).slice(0, 155);
   const url = new URL(`produto.html?p=${encodeURIComponent(p.slug)}`, location.href).href;
   // Crawlers need absolute image URLs; catalog paths are relative to the site root.
@@ -123,7 +130,7 @@ function buyboxHTML(p, pr, cat) {
 
       <div class="trust-row">
         <div>${icon('card', 20)}<b>Até ${CONFIG.MAX_INSTALLMENTS}x</b>no cartão</div>
-        <div>${icon('truck', 20)}<b>Frete grátis</b>acima de ${freeShip}</div>
+        <div>${icon('truck', 20)}<b>Frete grátis</b>${p.freeShipping ? 'neste produto' : `acima de ${freeShip}`}</div>
         <div>${icon('refresh', 20)}<b>7 dias</b>para desistir</div>
       </div>
     </div>`;
@@ -279,7 +286,7 @@ function notFound() {
       cepMsg.innerHTML = `<ul class="ship-quotes">${data.options.map((o) => `
         <li><span><b>${esc(o.name)}</b> · até ${range(o)} dias úteis</span>
         <strong${o.free ? ' class="ship-free"' : ''}>${o.price < o.original_price ? `<s>${money(o.original_price)}</s> ` : ''}${o.free ? 'Grátis' : money(o.price)}</strong></li>`).join('')}</ul>
-        <span class="ship-note">O prazo inclui o despacho de até ${data.options[0].dispatch_days} dias úteis e conta a partir da confirmação do pagamento.${data.subtotal < data.free_min ? ` ${freeNote}` : ` O frete grátis cobre até ${money(data.free_subsidy)} e você paga só o que passar disso.`}</span>`;
+        <span class="ship-note">O prazo inclui o despacho de até ${data.options[0].dispatch_days} dias úteis e conta a partir da confirmação do pagamento.${p.freeShipping ? ' Frete grátis neste produto.' : (data.subtotal < data.free_min ? ` ${freeNote}` : ` O frete grátis cobre até ${money(data.free_subsidy)} e você paga só o que passar disso.`)}</span>`;
     } catch {
       cepMsg.textContent = `Não conseguimos calcular agora. ${freeNote}`;
     }

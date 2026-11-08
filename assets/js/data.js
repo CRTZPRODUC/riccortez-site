@@ -20,18 +20,29 @@ async function load() {
   return cache;
 }
 
-/** All products, in catalog order. */
+// `hidden: true` products (e.g. a temporary payment test item) never show up in a list: shop,
+// search, categories, home, related items. They open only through their direct link
+// (produto.html?p=<slug>) and still work in the cart and checkout.
+const visible = (p) => !p.hidden;
+
+/** Listed products, in catalog order (hidden ones left out). */
 export async function getProducts() {
+  const data = await load();
+  return data.products.filter(visible);
+}
+
+/** Every product, hidden ones included: for the cart and checkout lookups only. */
+export async function getAllProducts() {
   const data = await load();
   return data.products;
 }
 
-/** One product by slug or numeric id, or null when not found. */
+/** One product by slug or numeric id, or null when not found. A hidden product only by slug. */
 export async function getProduct(slugOrId) {
   if (slugOrId == null || slugOrId === '') return null;
   const key = String(slugOrId);
-  const products = await getProducts();
-  return products.find((p) => p.slug === key || String(p.id) === key) || null;
+  const products = await getAllProducts();
+  return products.find((p) => p.slug === key || (visible(p) && String(p.id) === key)) || null;
 }
 
 const REVIEWS_URL = new URL('../../data/reviews.json', import.meta.url);
@@ -70,6 +81,6 @@ export async function getCategories() {
   const data = await load();
   return data.categories.map((c) => ({
     ...c,
-    count: data.products.filter((p) => p.cat === c.slug).length,
+    count: data.products.filter((p) => visible(p) && p.cat === c.slug).length,
   }));
 }

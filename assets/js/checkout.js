@@ -122,7 +122,9 @@ function renderOptions() {
       <span class="co-ship-name"><b>${esc(o.name)}</b><small>até ${range(o)} dias úteis</small></span>
       <strong${o.free ? ' class="ship-free"' : ''}>${o.price < o.original_price ? `<s>${money(o.original_price)}</s> ` : ''}${o.free ? 'Grátis' : money(o.price)}</strong>
     </label>`).join('')}</div>
-    <p class="ship-note">${sub >= quote.free_min
+    <p class="ship-note">${lines().every(({ p }) => p.freeShipping) && quote.options.every((o) => o.free)
+      ? 'Frete grátis neste pedido.'
+      : sub >= quote.free_min
       ? `Frete grátis de até ${money(quote.free_subsidy)}: se a opção custar mais, você paga só a diferença.`
       : `Faltam ${money(quote.free_min - sub)} em produtos para ganhar frete grátis de até ${money(quote.free_subsidy)}.`}
     O prazo conta a partir da confirmação do pagamento.</p>`;
@@ -320,8 +322,8 @@ function render() {
   if (quotedFor && quotedFor !== cartKey()) { quote = null; loadQuote(); }
 }
 
-boot().then(({ products }) => {
-  byId = new Map(products.map((p) => [p.id, p]));
+boot().then(({ all }) => {
+  byId = new Map(all.map((p) => [p.id, p]));
   bindCoupon($('[data-co-coupon]'), lines);
   render();
   cart.on(render);

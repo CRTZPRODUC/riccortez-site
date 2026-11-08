@@ -1,7 +1,7 @@
 // Shared runtime for every page: header, mobile nav, footer, cart drawer,
 // referral capture, theme toggle, reveal-on-scroll and small helpers.
 import { CONFIG } from './config.js';
-import { getProducts, getCategories } from './data.js';
+import { getAllProducts, getCategories } from './data.js';
 
 /* ------------------------------------------------------------------ helpers */
 
@@ -741,6 +741,9 @@ function renderCart() {
   const min = CONFIG.FREE_SHIPPING_MIN;
   if (!lines.length) {
     ship.hidden = true;
+  } else if (lines.every(({ p }) => p.freeShipping)) {
+    ship.hidden = false;
+    ship.innerHTML = `<p>${icon('truck', 17)} <b>Frete grátis neste pedido!</b></p>`;
   } else {
     ship.hidden = false;
     const pct = Math.min(100, (base / min) * 100);
@@ -942,7 +945,8 @@ export async function boot({ active = '' } = {}) {
   onScroll();
 
   try {
-    const [prods, cats] = await Promise.all([getProducts(), getCategories()]);
+    // `products` (module) keeps hidden ones for the cart; pages get only the listed ones.
+    const [prods, cats] = await Promise.all([getAllProducts(), getCategories()]);
     products = prods;
     catNames = Object.fromEntries(cats.map((c) => [c.slug, c.name]));
     footer.outerHTML = footerHTML(cats);
@@ -956,14 +960,14 @@ export async function boot({ active = '' } = {}) {
     }
     cart.on(renderCart);
     renderCart();
-    return { products: prods, categories: cats };
+    return { products: prods.filter((p) => !p.hidden), all: prods, categories: cats };
   } catch (err) {
     console.warn('Catálogo indisponível', err);
     footer.outerHTML = footerHTML([]);
     guardLogos($('.site-footer'));
     cart.on(renderCart);
     renderCart();
-    return { products: [], categories: [] };
+    return { products: [], all: [], categories: [] };
   }
 }
 

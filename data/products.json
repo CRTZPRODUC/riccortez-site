@@ -849,20 +849,6 @@
         "assets/img/ml/4719677083-3.webp"
       ],
       "desc": "Pocket Guitar Cavaco: braço de treino portátil e silencioso para praticar acordes, quadradinhos e ritmo do cavaquinho em qualquer lugar.\nTem as proporções e a escala de um braço de cavaco, com a mesma tensão, resistência e espaçamento do instrumento original. Você treina a memória muscular, a agilidade das posições e a força nos dedos sem emitir som e sem incomodar ninguém.\nO design é dupla face: de um lado você memoriza e pratica a transição de acordes, quadradinhos e escalas; do outro, treina a mão direita para aperfeiçoar a palhetada, o molejo e o ritmo. O formato é ultracompacto e cabe na mochila.\nComo as cordas têm a tensão do instrumento, o treino fortalece os dedos e ajuda a criar calos, e o que se pratica nele pode ser aplicado direto no cavaquinho.\nEspecificações: construção em madeira."
-    },
-    {
-      "id": 999001,
-      "name": "Item de teste InfinitePay",
-      "slug": "teste-pagamento-kerhusbc",
-      "cat": "acessorios",
-      "price": 3,
-      "regular": 3,
-      "stock": true,
-      "hidden": true,
-      "freeShipping": true,
-      "img": "assets/img/wp/2020-05-gold-pro-1-e1591999467120.webp",
-      "imgs": [],
-      "desc": "Item temporário para testar o pagamento na InfinitePay. Não é um produto à venda."
     }
   ]
 }

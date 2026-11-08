@@ -177,6 +177,146 @@ export function getRef() {
   return ref;
 }
 
+/* ------------------------------------------------------------------- coupon */
+
+// Store coupon typed by the customer (e.g. BLACKGOLDPRO). Kept in localStorage `rc_coupon` as
+// { code, percent, ends_at, pix_only }. Validated by the database function coupon_quote (public,
+// via PostgREST); the `checkout` function checks it again and the order trigger has the last word.
+// Rule: each item costs the lower of its own price and its full price minus the coupon percent
+// (never both). Pix-only coupons are worth nothing on the card. Shipping is never discounted.
+// Note: `?cupom=` in the URL is the affiliate code (see captureRefFromUrl), not this coupon.
+const COUPON_KEY = 'rc_coupon';
+const couponListeners = new Set();
+
+export const COUPON_REASONS = {
+  not_found: 'Cupom não encontrado. Confira o código.',
+  inactive: 'Este cupom não está ativo.',
+  not_started: 'Este cupom ainda não começou a valer.',
+  expired: 'Este cupom expirou.',
+  sold_out: 'Este cupom esgotou: todos os usos foram aproveitados.',
+  pix_only: 'Cupom válido só no Pix.',
+  no_effect: 'Os produtos do carrinho já têm desconto igual ou maior que o do cupom.',
+};
+
+export const coupon = {
+  get() {
+    const c = store.get(COUPON_KEY);
+    if (!c || !c.code || !c.percent) return null;
+    if (c.ends_at && Date.now() > Date.parse(c.ends_at)) { store.del(COUPON_KEY); return null; }
+    return c;
+  },
+  set(c) { store.set(COUPON_KEY, c); couponListeners.forEach((fn) => fn(c)); },
+  clear() { store.del(COUPON_KEY); couponListeners.forEach((fn) => fn(null)); },
+  on(fn) { couponListeners.add(fn); },
+};
+
+window.addEventListener('storage', (e) => {
+  if (e.key === COUPON_KEY) couponListeners.forEach((fn) => fn(coupon.get()));
+});
+
+// Coupon unit price, same formula as the database (cents, half up): min(price, regular - pct%).
+export function couponUnit(p, percent) {
+  const price = Number(p.price) || 0;
+  const regular = Math.max(Number(p.regular) || price, price);
+  return Math.min(price, Math.round(Math.round(regular * 100) * (100 - percent) / 100) / 100);
+}
+
+// Discount of the coupon on cart lines [{ p, qty }] (0 when it changes nothing).
+export function couponDiscount(lines, c = coupon.get()) {
+  if (!c) return 0;
+  return Math.round(lines.reduce((s, { p, qty }) => s + (Math.round(p.price * 100) - Math.round(couponUnit(p, c.percent) * 100)) * qty, 0)) / 100;
+}
+
+// Asks the database whether `code` can be used for these lines. -> coupon_quote answer.
+export async function checkCoupon(code, lines, method = 'pix') {
+  const res = await fetch(`${CONFIG.SUPABASE_URL}/rest/v1/rpc/coupon_quote`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      apikey: CONFIG.SUPABASE_PUBLISHABLE_KEY,
+      Authorization: `Bearer ${CONFIG.SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({
+      p_code: String(code || '').trim(),
+      p_method: method,
+      p_items: lines.map(({ p, qty }) => ({ id: p.id, price: p.price, regular: p.regular ?? p.price, qty })),
+    }),
+  });
+  if (!res.ok) throw new Error(`coupon ${res.status}`);
+  return res.json();
+}
+
+let couponSeq = 0;
+
+// Coupon form, or the applied coupon, shared by the cart drawer and the checkout summary.
+// `lines` are the current cart lines; `method` 'pix' or 'card'.
+export function couponBlock(lines, method = 'pix') {
+  const c = coupon.get();
+  if (!c) {
+    const id = `coupon-${++couponSeq}`;
+    return `
+      <div class="coupon-form" data-coupon-form>
+        <label class="sr-only" for="${id}">Cupom de desconto</label>
+        <input id="${id}" name="coupon_code" placeholder="Cupom de desconto" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="40" data-coupon-input>
+        <button class="btn btn-ghost" type="button" data-coupon-apply>Aplicar</button>
+      </div>
+      <p class="coupon-msg" data-coupon-msg role="status"></p>`;
+  }
+  const d = couponDiscount(lines, c);
+  const card = c.pix_only && method === 'card';
+  const note = d <= 0
+    ? COUPON_REASONS.no_effect
+    : (card ? `${COUPON_REASONS.pix_only} No cartão o preço é o normal.` : `${money(d)} de desconto nos produtos${c.pix_only ? ', só no Pix' : ''}.`);
+  return `
+    <div class="coupon-chip${d <= 0 || card ? ' is-off' : ''}">
+      <span>${icon('check', 16)} Cupom <b>${esc(c.code)}</b></span>
+      <button class="btn btn-link" type="button" data-coupon-remove>Remover</button>
+    </div>
+    <p class="coupon-msg">${esc(note)}</p>`;
+}
+
+// Wires the coupon box inside `root` (delegated; call once per root). `getLines` returns the
+// current cart lines. Applying or removing fires coupon.on listeners, which re-render.
+// The box is a plain div (not a <form>) because on the checkout page it sits inside the order
+// form, and nested forms are not allowed; Enter in the field applies the coupon instead.
+export function bindCoupon(root, getLines) {
+  const apply = async (f) => {
+    const msg = $('[data-coupon-msg]', f.parentElement);
+    const input = $('[data-coupon-input]', f);
+    const code = input.value.trim().toUpperCase();
+    if (!code) { input.focus(); return; }
+    const btn = $('[data-coupon-apply]', f);
+    if (btn.disabled) return;
+    btn.disabled = true;
+    msg.classList.remove('is-error');
+    msg.textContent = 'Validando...';
+    try {
+      const q = await checkCoupon(code, getLines(), 'pix');
+      if (q.ok || q.reason === 'no_effect') {
+        coupon.set({ code: q.code, percent: Number(q.percent), ends_at: q.ends_at, pix_only: !!q.pix_only });
+        toast(q.ok ? `Cupom ${q.code} aplicado.` : COUPON_REASONS.no_effect);
+        return;
+      }
+      msg.textContent = COUPON_REASONS[q.reason] || COUPON_REASONS.not_found;
+      msg.classList.add('is-error');
+    } catch {
+      msg.textContent = 'Não conseguimos validar o cupom agora. Tente de novo.';
+      msg.classList.add('is-error');
+    }
+    btn.disabled = false;
+  };
+  root.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter' || !e.target.matches('[data-coupon-input]')) return;
+    e.preventDefault();
+    apply(e.target.closest('[data-coupon-form]'));
+  });
+  root.addEventListener('click', (e) => {
+    if (e.target.closest('[data-coupon-remove]')) coupon.clear();
+    const b = e.target.closest('[data-coupon-apply]');
+    if (b) apply(b.closest('[data-coupon-form]'));
+  });
+}
+
 /* -------------------------------------------------------------- page chrome */
 
 // The main nav is the catalog itself. The desktop bar shows the best-selling categories,
@@ -562,6 +702,9 @@ function renderCart() {
     .map((i) => ({ ...i, p: products.find((p) => p.id === i.id) }))
     .filter((l) => l.p);
   const subtotal = lines.reduce((s, l) => s + l.p.price * l.qty, 0);
+  // Coupon (Pix): the free-shipping threshold uses the products after the coupon, as in checkout.
+  const cDisc = couponDiscount(lines);
+  const base = subtotal - cDisc;
 
   const ship = $('[data-ship]');
   const min = CONFIG.FREE_SHIPPING_MIN;
@@ -569,11 +712,11 @@ function renderCart() {
     ship.hidden = true;
   } else {
     ship.hidden = false;
-    const pct = Math.min(100, (subtotal / min) * 100);
+    const pct = Math.min(100, (base / min) * 100);
     ship.innerHTML = `
-      <p>${icon('truck', 17)} ${subtotal >= min
+      <p>${icon('truck', 17)} ${base >= min
         ? `<b>Você ganhou ${freeShipText()}!</b>`
-        : `Faltam <b>${money(min - subtotal)}</b> para frete grátis`}</p>
+        : `Faltam <b>${money(min - base)}</b> para frete grátis`}</p>
       <div class="bar" role="progressbar" aria-label="Progresso para frete grátis" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}"><span style="width:${pct}%"></span></div>`;
   }
 
@@ -611,8 +754,10 @@ function renderCart() {
   const ref = getRef();
   foot.innerHTML = `
     ${ref ? `<p class="ref-note">${icon('check', 16)} Código <b>${esc(ref.code)}</b> será validado no checkout.</p>` : ''}
+    <div class="cart-coupon">${couponBlock(lines, 'pix')}</div>
     <div class="sum-row"><span>Subtotal</span><strong>${money(subtotal)}</strong></div>
-    <p class="muted small">${n > 1 ? `ou em até ${n}x sem juros` : `ou em até ${CONFIG.MAX_INSTALLMENTS}x no cartão`}${CONFIG.PIX_DISCOUNT_PERCENT > 0 ? ` · ${money(subtotal * (1 - CONFIG.PIX_DISCOUNT_PERCENT / 100))} no Pix` : ''}. Frete calculado no checkout.</p>
+    ${cDisc > 0 ? `<div class="sum-row coupon-row"><span>Cupom ${esc(coupon.get().code)} (no Pix)</span><strong>− ${money(cDisc)}</strong></div>` : ''}
+    <p class="muted small">${n > 1 ? `ou em até ${n}x sem juros` : `ou em até ${CONFIG.MAX_INSTALLMENTS}x no cartão`}${CONFIG.PIX_DISCOUNT_PERCENT > 0 ? ` · <b>${money(Math.round(base * (100 - CONFIG.PIX_DISCOUNT_PERCENT)) / 100)} no Pix</b>${cDisc > 0 ? ' com o cupom' : ''}` : ''}. Frete calculado no checkout.</p>
     <a class="btn btn-primary btn-block" href="checkout.html">${icon('lock', 18)} Finalizar compra</a>
     <button class="btn btn-link btn-block" type="button" data-close>Continuar comprando</button>`;
 }
@@ -743,6 +888,9 @@ export async function boot({ active = '' } = {}) {
   if (CONFIG.FAVICON_URL) $$('link[rel~="icon"]').forEach((l) => { l.href = CONFIG.FAVICON_URL; });
   document.body.insertAdjacentHTML('beforeend', cartDrawerHTML());
   applyThemeIcon();
+  bindCoupon($('[data-cart-foot]'), () => cart.items
+    .map((i) => ({ p: products.find((p) => p.id === i.id), qty: i.qty })).filter((l) => l.p));
+  coupon.on(() => renderCart());
 
   document.addEventListener('click', onClick);
   document.addEventListener('keydown', (e) => {

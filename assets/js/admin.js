@@ -152,7 +152,7 @@ function orderHtml(o, open) {
     <span class="adm-code">${esc(o.code)}</span>
     <span class="adm-sum-total">${money(paid ?? o.total)}</span>
     <span class="adm-sum-meta">${esc(c.name)} · ${esc(a.city)}/${esc(a.state)} · ${when(o.created_at)}</span>
-    <span class="adm-badges">${o.ref ? `<span class="adm-badge is-ref" title="Código de indicação">Ref ${esc(o.ref)}</span>` : ''}<span class="adm-badge ${payCls}">${payLabel}</span>${o.status === 'paid' ? `<span class="adm-badge ${shipCls}">${shipLabel}</span>` : ''}</span>
+    <span class="adm-badges">${o.coupon_code ? `<span class="adm-badge is-ref" title="Cupom">${esc(o.coupon_code)}</span>` : ''}${o.ref ? `<span class="adm-badge is-ref" title="Código de indicação">Ref ${esc(o.ref)}</span>` : ''}<span class="adm-badge ${payCls}">${payLabel}</span>${o.status === 'paid' ? `<span class="adm-badge ${shipCls}">${shipLabel}</span>` : ''}</span>
   </summary>
   <div class="adm-body">
     <div>
@@ -171,6 +171,7 @@ function orderHtml(o, open) {
       <ul class="adm-items">${items}</ul>
       <div class="adm-rows">
         <span>Produtos</span><span>${money(o.subtotal)}</span>
+        ${o.coupon_code ? `<span>Cupom ${esc(o.coupon_code)}${o.status === 'pending' ? ' (só no Pix)' : ''}</span><span>${Number(o.coupon_discount) > 0 ? `− ${money(o.coupon_discount)}` : 'não usado (cartão)'}</span>` : ''}
         <span>Frete cobrado</span><span>${Number(o.shipping_price) > 0 ? money(o.shipping_price) : 'Grátis'}</span>
         <span class="tot">${paid != null ? 'Pago' : 'Total'}</span><span class="tot">${money(paid ?? o.total)}</span>
       </div>

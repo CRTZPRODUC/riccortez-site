@@ -1,6 +1,6 @@
 // Home page: rotating hero (with the Black November slide), categories, showcase tabs, Gold Extreme Bass band,
 // buyer reviews and FAQ accordion.
-import { boot, productCard, reviewCard, stars, REVIEW_SOURCES, reveal, pricing, installmentText, money, esc, icon, $, $$ } from './app.js';
+import { boot, productCard, reviewCard, stars, REVIEW_SOURCES, reveal, pricing, installmentText, money, esc, icon, toast, $, $$ } from './app.js';
 import { CONFIG } from './config.js';
 import { getProduct, getReviews } from './data.js';
 
@@ -13,6 +13,35 @@ const TABS = {
   novidades: { filter: (p) => p.isNew, more: 'loja.html?sort=new' },
   ofertas: { filter: (p) => Number(p.regular) > Number(p.price), more: 'loja.html?ofertas=1' },
 };
+
+/* ----------------------------------------------------------- coupon slide */
+
+// BLACKGOLDPRO slide (first in the hero): removed after CONFIG.COUPON_SLIDE.end. Runs before
+// initHero so the slide count is right. The copy button puts the code on the clipboard; the
+// customer pastes it in the cart or at checkout, where it is validated.
+function initCouponSlide() {
+  const slide = $('[data-coupon-slide]');
+  if (!slide) return;
+  const end = new Date(CONFIG.COUPON_SLIDE?.end || 0).getTime();
+  if (!(end > Date.now())) { slide.remove(); return; }
+  slide.addEventListener('click', async (e) => {
+    const b = e.target.closest('[data-copy-coupon]');
+    if (!b) return;
+    const code = b.dataset.copyCoupon;
+    try {
+      await navigator.clipboard.writeText(code);
+    } catch {
+      // Older browsers or no clipboard permission: select the code from a hidden field.
+      const t = Object.assign(document.createElement('textarea'), { value: code });
+      t.style.cssText = 'position:fixed;opacity:0';
+      document.body.append(t);
+      t.select();
+      try { document.execCommand('copy'); } catch { /* nothing else to try */ }
+      t.remove();
+    }
+    toast(`Cupom ${code} copiado. Cole no carrinho ou no checkout.`);
+  });
+}
 
 /* -------------------------------------------------------- black november */
 
@@ -432,6 +461,7 @@ function wireFaq() {
   $('[data-free-ship-faq]').textContent = free;
   wireFaq();
   if (products.length) {
+    initCouponSlide();
     initBlackNovember(products);
     initHero(products);
     renderCategories(categories, products);

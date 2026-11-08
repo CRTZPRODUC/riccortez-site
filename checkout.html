@@ -78,7 +78,14 @@
         <aside class="co-box co-summary" aria-labelledby="co-h-sum">
           <h2 id="co-h-sum">Resumo do pedido</h2>
           <ul class="co-lines" data-co-lines></ul>
+          <fieldset class="co-pay" data-co-pay>
+            <legend>Forma de pagamento</legend>
+            <label class="co-pay-opt"><input type="radio" name="payment" value="pix" checked> <span><b>Pix</b><small>à vista, com desconto</small></span></label>
+            <label class="co-pay-opt"><input type="radio" name="payment" value="card"> <span><b>Cartão</b><small>em até 12x</small></span></label>
+          </fieldset>
+          <div class="co-coupon" data-co-coupon></div>
           <div class="sum-row"><span>Produtos</span><strong data-co-subtotal></strong></div>
+          <div class="sum-row coupon-row" data-co-coupon-row hidden><span data-co-coupon-label></span><strong data-co-coupon-val></strong></div>
           <div class="sum-row co-ship-row"><span data-co-ship-label>Frete</span><strong data-co-ship>Informe o CEP</strong></div>
           <div class="sum-row co-total"><span>Total</span><strong data-co-total></strong></div>
           <div class="sum-row co-pix" data-co-pix-row hidden><span data-co-pix-label></span><strong data-co-pix></strong></div>

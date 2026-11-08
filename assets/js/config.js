@@ -104,6 +104,13 @@ export const CONFIG = {
     end: '2026-11-30T23:59:59-03:00',
   },
 
+  // First home hero slide advertising a coupon. It disappears after `end`; keep `end` equal to
+  // the coupon's ends_at in the database (table public.coupons, see README "Cupons").
+  COUPON_SLIDE: {
+    code: 'BLACKGOLDPRO',
+    end: '2026-11-30T23:59:59-03:00',
+  },
+
   // Contact and legal data shown in the footer and on the institutional pages.
   // whatsappIntl is the wa.me number (country code + DDD + number, digits only).
   CONTACT: {

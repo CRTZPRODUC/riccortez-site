@@ -317,6 +317,30 @@ ul { margin: 0; padding: 0; list-style: none; }
 .sum-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 16px; }
 .sum-row strong { font-size: 22px; font-weight: 800; }
 .drawer-foot .muted { margin: 4px 0 14px; }
+
+/* ------------------------------------------------------------- coupon */
+/* Coupon box shared by the cart drawer and the checkout summary (couponBlock in app.js). */
+.coupon-form { display: flex; gap: 8px; }
+.coupon-form input {
+  flex: 1; min-width: 0; min-height: 44px; padding: 0 12px; border: 1px solid var(--line-2); border-radius: var(--radius);
+  background: var(--bg-1); color: var(--ink); font: inherit; font-size: 14px; text-transform: uppercase; letter-spacing: .04em;
+}
+.coupon-form input::placeholder { text-transform: none; letter-spacing: 0; color: var(--ink-3); }
+.coupon-form input:focus { outline: none; border-color: var(--gold); }
+.coupon-form .btn { min-height: 44px; padding: 0 16px; }
+.coupon-chip {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 4px 4px 12px;
+  border: 1px dashed var(--gold); border-radius: var(--radius); background: var(--gold-soft); color: var(--gold-text); font-size: 14px;
+}
+.coupon-chip span { display: inline-flex; align-items: center; gap: 6px; }
+.coupon-chip.is-off { border-color: var(--line-2); background: transparent; color: var(--ink-2); }
+.coupon-chip .btn-link { min-height: 32px; padding: 0 8px; font-size: 13px; }
+.coupon-msg { margin: 6px 0 0; font-size: 13px; color: var(--ink-3); line-height: 1.4; }
+.coupon-msg:empty { display: none; }
+.coupon-msg.is-error { color: var(--red); }
+.cart-coupon { margin-bottom: 12px; }
+.sum-row.coupon-row, .co-summary .sum-row.coupon-row strong { color: var(--green); font-size: 15px; }
+.sum-row.coupon-row strong { font-size: 16px; font-weight: 700; }
 .ref-note { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); margin: 0 0 12px; }
 .ref-note .ico { color: var(--green); }
 

@@ -70,6 +70,18 @@
 .co-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .co-summary .co-pix strong { color: var(--gold-text); }
 
+/* Payment choice in the summary (decides whether a Pix-only coupon counts). */
+.co-pay { border: 0; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.co-pay legend { font-size: 13px; color: var(--ink-3); margin-bottom: 6px; padding: 0; }
+.co-pay-opt {
+  display: flex; gap: 8px; align-items: center; padding: 10px 12px; border: 1px solid var(--line-2);
+  border-radius: var(--radius); cursor: pointer; font-size: 14px;
+}
+.co-pay-opt:has(input:checked) { border-color: var(--gold); background: var(--gold-soft); }
+.co-pay-opt input { accent-color: var(--gold); width: 16px; height: 16px; margin: 0; }
+.co-pay-opt span { display: grid; gap: 1px; }
+.co-pay-opt small { color: var(--ink-3); font-size: 12px; }
+
 @media (max-width: 599px) {
   .co-wrap { padding-top: 20px; padding-bottom: 48px; }
   .co-title { margin-bottom: 16px; }

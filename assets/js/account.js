@@ -188,7 +188,7 @@ async function renderDash(user) {
   const box = $('[data-orders]');
   box.innerHTML = '<p class="muted">Carregando...</p>';
   const { data, error } = await (await supa()).from('orders')
-    .select('code,status,total,paid_amount_cents,created_at,items')
+    .select('code,status,total,paid_amount_cents,created_at,items,coupon_code,coupon_discount')
     .order('created_at', { ascending: false })
     .limit(50);
   if (error) { box.innerHTML = '<p class="muted">Não conseguimos carregar seus pedidos agora. Recarregue a página.</p>'; return; }
@@ -203,7 +203,7 @@ async function renderDash(user) {
     return `<li><a class="order-row" href="pedido.html?pedido=${encodeURIComponent(o.code)}">
       <span class="order-top"><b>${esc(o.code)}</b><span class="order-status ${cls}">${label}</span></span>
       <span class="order-items">${items}</span>
-      <span class="order-meta muted small">${date(o.created_at)} · ${money(total)}</span>
+      <span class="order-meta muted small">${date(o.created_at)} · ${money(total)}${o.coupon_code && Number(o.coupon_discount) > 0 ? ` · cupom ${esc(o.coupon_code)}` : ''}</span>
     </a></li>`;
   }).join('')}</ul>`;
 }

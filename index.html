@@ -33,10 +33,29 @@
     <!-- Hero: rotating highlights. The Black November slide and the Gold Extreme Bass slide (the
          flagship, with the page h1) are static HTML so the first paint and LCP image are stable;
          the other slides are built from data/products.json by home.js. home.js removes the Black
-         November slide and its ticker once CONFIG.BLACK_NOVEMBER.end has passed. -->
+         November slide and its ticker once CONFIG.BLACK_NOVEMBER.end has passed, and the
+         BLACKGOLDPRO coupon slide (first) once CONFIG.COUPON_SLIDE.end has passed. -->
     <section class="hero" aria-roledescription="carrossel" aria-label="Destaques da loja" data-hero>
       <div class="hero-slides" data-hero-slides>
-        <div class="hero-slide hero-slide--bn is-active" role="group" aria-roledescription="slide" aria-label="1 de 5" data-bn data-name="Black November Gold Pro">
+        <!-- Coupon slide. Background: assets/img/banner-blackgoldpro.jpg (1600x893, same as the
+             other slides), set in pages.css over a black and gold gradient that shows while the
+             image is missing. -->
+        <div class="hero-slide hero-slide--coupon is-active" role="group" aria-roledescription="slide" aria-label="1 de 6" data-coupon-slide data-name="Cupom BLACKGOLDPRO">
+          <div class="hero-bg hero-bg--coupon" aria-hidden="true"></div>
+          <div class="container hero-grid">
+            <div class="hero-copy">
+              <span class="hero-eyebrow"><span class="pulse" aria-hidden="true"></span>Black November Gold Pro · Cupom exclusivo</span>
+              <h2 class="hero-title bn-title coupon-title"><span class="bn-gold">BLACKGOLDPRO:</span> <span>10% OFF no Pix</span></h2>
+              <p class="hero-sub">Cupom de uso limitado, válido até 30/11 nos produtos sem desconto.</p>
+              <div class="hero-ctas">
+                <a class="btn btn-primary btn-lg" href="loja.html">Comprar agora <svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+                <button class="btn btn-ghost btn-lg coupon-copy" type="button" data-copy-coupon="BLACKGOLDPRO"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg> Copiar cupom</button>
+              </div>
+            </div>
+            <div class="hero-visual" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="hero-slide hero-slide--bn" role="group" aria-roledescription="slide" aria-label="2 de 6" data-bn data-name="Black November Gold Pro" aria-hidden="true" inert>
           <div class="hero-bg" aria-hidden="true"><img src="assets/img/black-november-1600.webp" srcset="assets/img/black-november-800.webp 800w, assets/img/black-november-1600.webp 1600w" sizes="100vw" alt="" width="1600" height="893" decoding="async" fetchpriority="high"></div>
           <div class="container hero-grid">
             <div class="hero-copy">
@@ -59,7 +78,7 @@
             <div class="hero-visual" aria-hidden="true"></div>
           </div>
         </div>
-        <div class="hero-slide" role="group" aria-roledescription="slide" aria-label="2 de 5" data-slug="gold-extreme-bass-duplo" aria-hidden="true" inert>
+        <div class="hero-slide" role="group" aria-roledescription="slide" aria-label="3 de 6" data-slug="gold-extreme-bass-duplo" aria-hidden="true" inert>
           <div class="hero-bg" aria-hidden="true"><img src="assets/img/hero-captadores-1600.webp" srcset="assets/img/hero-captadores-800.webp 800w, assets/img/hero-captadores-1600.webp 1600w" sizes="100vw" alt="" width="1600" height="893" decoding="async"></div>
           <div class="container hero-grid">
             <div class="hero-copy">

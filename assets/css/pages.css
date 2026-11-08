@@ -629,6 +629,18 @@
 /* The photo's subject sits right of center, so keep it in frame on narrow screens. */
 .hero-slide--bn .hero-bg img { object-position: 68% center; }
 
+/* BLACKGOLDPRO coupon slide: photo assets/img/banner-blackgoldpro.jpg (1600x893, like the other
+   slides) over a black and gold gradient that stands in while the photo is missing. */
+.hero-bg--coupon {
+  background:
+    url("../img/banner-blackgoldpro.jpg") 75% center / cover no-repeat,
+    radial-gradient(ellipse 55% 75% at 78% 45%, rgba(245, 200, 66, .38) 0%, rgba(196, 138, 28, .16) 45%, transparent 75%),
+    linear-gradient(135deg, #050505 0%, #0d0a04 45%, #2a1e06 75%, #0a0803 100%);
+  background-color: #050505;
+}
+.coupon-title { font-size: clamp(44px, 7vw, 104px); }
+.coupon-copy .ico { margin-right: -2px; }
+
 .bn-ticker { overflow: hidden; background: #f5c842; color: #0a0a0a; border-bottom: 1px solid #0a0a0a; }
 /* The track holds two identical halves; moving it by -50% loops without a gap. */
 .bn-ticker-track { display: flex; width: max-content; animation: bn-marquee 30s linear infinite; }

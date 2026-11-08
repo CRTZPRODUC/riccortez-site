@@ -44,6 +44,13 @@ function render(o) {
   const items = o.items.map((i) => `<li>${i.qty} × ${esc(i.name)}</li>`).join('');
   const how = paid && o.capture_method
     ? `<p>${esc(METHOD[o.capture_method] || o.capture_method)}${o.installments > 1 ? ` em ${o.installments}x` : ''}.</p>` : '';
+  // Coupon: while pending it is Pix only (total is the card price); once paid by card its
+  // discount is 0 and the line is not shown.
+  const cDisc = Number(o.coupon_discount) || 0;
+  const pendingCoupon = o.status === 'pending' && cDisc > 0;
+  const coupon = o.coupon_code && cDisc > 0
+    ? `<div class="sum-row coupon-row"><span>Cupom ${esc(o.coupon_code)}${pendingCoupon ? ' (no Pix)' : ''}</span><strong>− ${money(cDisc)}</strong></div>` : '';
+  const pixPrice = Math.round(Math.round((o.total - cDisc) * 100) * (100 - (o.pix_discount_percent || 0)) / 100) / 100;
   const head = {
     paid: ['co-ok', 'Pagamento confirmado!', 'Recebemos seu pedido e você vai receber as atualizações por e-mail. O prazo de entrega conta a partir de agora.'],
     pending: ['co-wait', 'Aguardando pagamento', 'Ainda não recebemos a confirmação. Pix e cartão costumam confirmar em poucos minutos: recarregue esta página daqui a pouco.'],
@@ -59,8 +66,9 @@ function render(o) {
     <div class="co-box">
       <ul class="co-order-items">${items}</ul>
       ${o.shipping ? `<p class="muted">Entrega: ${esc(o.shipping)}</p>` : ''}
-      <div class="sum-row co-total"><span>${o.paid_total != null ? 'Total pago' : 'Total'}</span><strong>${money(o.paid_total ?? o.total)}</strong></div>
-      ${o.paid_total == null && o.status === 'pending' && o.pix_discount_percent > 0 ? `<p class="muted small">No Pix: ${money(Math.round(o.total * (100 - o.pix_discount_percent)) / 100)} (${o.pix_discount_percent}% de desconto).</p>` : ''}
+      ${coupon}
+      <div class="sum-row co-total"><span>${o.paid_total != null ? 'Total pago' : (pendingCoupon ? 'Total no cartão' : 'Total')}</span><strong>${money(o.paid_total ?? o.total)}</strong></div>
+      ${o.paid_total == null && o.status === 'pending' && (o.pix_discount_percent > 0 || pendingCoupon) ? `<p class="muted small">No Pix: ${money(pixPrice)} (${pendingCoupon ? `cupom ${esc(o.coupon_code)} + ` : ''}${o.pix_discount_percent}% de desconto${pendingCoupon ? '; no cartão o cupom não vale' : ''}).</p>` : ''}
       ${how}
       ${o.receipt_url ? `<p><a href="${esc(o.receipt_url)}" target="_blank" rel="noopener">Ver comprovante</a></p>` : ''}
     </div>

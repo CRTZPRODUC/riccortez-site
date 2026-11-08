@@ -3,7 +3,9 @@
 // recomputes everything and returns the InfinitePay payment page we redirect to.
 
 import { CONFIG } from './config.js';
-import { $, $$, boot, cart, esc, getRef, interestFree, money } from './app.js';
+import {
+  $, $$, bindCoupon, boot, cart, coupon, COUPON_REASONS, couponBlock, couponDiscount, esc, getRef, interestFree, money,
+} from './app.js';
 
 const form = $('[data-co-form]');
 const digits = (s) => String(s || '').replace(/\D/g, '');
@@ -16,7 +18,16 @@ let selected = null;       // chosen service id
 const lines = () => cart.items.map((i) => ({ p: byId.get(i.id), qty: i.qty })).filter((l) => l.p);
 const subtotal = () => lines().reduce((s, l) => s + l.p.price * l.qty, 0);
 const itemsBody = () => cart.items.map(({ id, qty }) => ({ id, qty }));
-const cartKey = () => `${digits(form.cep.value)}|${JSON.stringify(itemsBody())}`;
+// Payment chosen here. InfinitePay still offers both on its page; a Pix-only coupon is folded
+// into the Pix discount of the link, so paying by card there costs the normal card price.
+const method = () => (form.payment?.value === 'card' ? 'card' : 'pix');
+// Coupon discount that applies to this order (0 on the card for a Pix-only coupon).
+const couponNow = () => {
+  const c = coupon.get();
+  if (!c || (c.pix_only && method() === 'card')) return 0;
+  return couponDiscount(lines(), c);
+};
+const cartKey = () => `${digits(form.cep.value)}|${JSON.stringify(itemsBody())}|${coupon.get()?.code ?? ''}|${method()}`;
 
 /* ----------------------------------------------------------------- masks */
 
@@ -42,6 +53,13 @@ function renderSummary() {
       <strong>${money(p.price * qty)}</strong>
     </li>`).join('');
   $('[data-co-subtotal]').textContent = money(sub);
+  $('[data-co-coupon]').innerHTML = couponBlock(ls, method());
+  const cDisc = couponNow();
+  $('[data-co-coupon-row]').hidden = !(cDisc > 0);
+  if (cDisc > 0) {
+    $('[data-co-coupon-label]').textContent = `Cupom ${coupon.get().code} (no Pix)`;
+    $('[data-co-coupon-val]').textContent = `− ${money(cDisc)}`;
+  }
 
   const opt = quote?.options.find((o) => o.id === selected);
   // Free shipping shows GRÁTIS; above the subsidy only the part the customer pays is shown.
@@ -51,13 +69,16 @@ function renderSummary() {
   shipEl.classList.toggle('co-ship-free', !!opt && opt.price === 0);
   shipEl.classList.toggle('muted', !opt);
   const total = sub + (opt ? opt.price : 0);
+  // With a coupon the "Total" row is the card price and the Pix row has the coupon too.
+  $('[data-co-total]').previousElementSibling.textContent = cDisc > 0 ? 'Total no cartão' : 'Total';
   $('[data-co-total]').textContent = money(total);
-  // InfinitePay applies the Pix discount to the whole payment, shipping included.
+  // InfinitePay applies the Pix discount to the whole payment, shipping included (the coupon
+  // only to the products).
   const pixPct = CONFIG.PIX_DISCOUNT_PERCENT;
-  $('[data-co-pix-row]').hidden = !(pixPct > 0);
-  if (pixPct > 0) {
-    $('[data-co-pix-label]').textContent = `No Pix (${pixPct}% de desconto)`;
-    $('[data-co-pix]').textContent = money(Math.round(total * (100 - pixPct)) / 100);
+  $('[data-co-pix-row]').hidden = !(pixPct > 0 || cDisc > 0);
+  if (pixPct > 0 || cDisc > 0) {
+    $('[data-co-pix-label]').textContent = cDisc > 0 ? `No Pix (cupom + ${pixPct}% de desconto)` : `No Pix (${pixPct}% de desconto)`;
+    $('[data-co-pix]').textContent = money(Math.round(Math.round((total - cDisc) * 100) * (100 - pixPct) / 100) / 100);
   }
 
   const n = interestFree(sub);
@@ -87,7 +108,8 @@ function renderOptions() {
     return;
   }
   if (!quote.options.some((o) => o.id === selected)) selected = quote.options[0].id;
-  const sub = quote.subtotal;
+  // Free shipping counts the products after the coupon (the server answer says how much).
+  const sub = quote.subtotal - (Number(quote.coupon?.discount) || 0);
   shipBox.innerHTML = `<div class="co-ship" role="radiogroup" aria-label="Opções de frete">${quote.options.map((o) => `
     <label class="co-ship-opt">
       <input type="radio" name="service" value="${o.id}"${o.id === selected ? ' checked' : ''}>
@@ -118,10 +140,15 @@ async function loadQuote() {
     const res = await fetch(CONFIG.SHIPPING_API_URL, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ cep, items: itemsBody() }),
+      body: JSON.stringify({ cep, items: itemsBody(), coupon: coupon.get()?.code, payment: method() }),
     });
     const data = await res.json();
     if (seq !== quoteSeq) return;
+    if (!res.ok && data.error === 'coupon') {
+      // The coupon can no longer be used (expired, sold out...): drop it and quote again.
+      couponError(data.reason);
+      return;
+    }
     if (!res.ok) {
       quote = null; quotedFor = '';
       shipBox.innerHTML = `<p class="co-error">${data.error === 'cep'
@@ -138,6 +165,17 @@ async function loadQuote() {
   }
   renderSummary();
 }
+
+function couponError(reason) {
+  coupon.clear();
+  errBox.textContent = `${COUPON_REASONS[reason] || COUPON_REASONS.not_found} O cupom foi removido; confira os valores.`;
+}
+
+form.addEventListener('change', (e) => {
+  if (e.target.name !== 'payment') return;
+  renderSummary();
+  loadQuote();
+});
 
 /* ------------------------------------------------------------ CEP lookup */
 
@@ -228,6 +266,8 @@ form.addEventListener('submit', async (e) => {
         cep: digits(form.cep.value),
         service_id: selected,
         ref: getRef()?.code,
+        coupon: coupon.get()?.code,
+        payment: method(),
         customer: {
           name: form.name.value, email: form.email.value, phone: digits(form.phone.value), cpf: digits(form.cpf.value),
         },
@@ -250,6 +290,7 @@ form.addEventListener('submit', async (e) => {
       renderSummary();
       errBox.textContent = 'O valor do frete mudou. Confira a opção e tente de novo.';
     } else if (data.error === 'cep') markInvalid(['cep']);
+    else if (data.error === 'coupon') couponError(data.reason);
     else if (data.error === 'product' || data.error === 'items') {
       errBox.textContent = 'Algum item do carrinho não está mais disponível. Revise o carrinho.';
     } else {
@@ -275,8 +316,10 @@ function render() {
 
 boot().then(({ products }) => {
   byId = new Map(products.map((p) => [p.id, p]));
+  bindCoupon($('[data-co-coupon]'), lines);
   render();
   cart.on(render);
+  coupon.on(() => { render(); loadQuote(); });
   prefillFromAccount();
 });
 

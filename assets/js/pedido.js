@@ -7,8 +7,23 @@ import { $, boot, cart, esc, money } from './app.js';
 
 const box = $('[data-order]');
 const q = new URLSearchParams(location.search);
-let code = q.get('order_nsu') || q.get('pedido') || '';
-if (!code) { try { code = sessionStorage.getItem('rc_last_order') || ''; } catch { /* private mode */ } }
+// InfinitePay now puts its own UUID in order_nsu, so the code comes from ?pedido= (set in
+// redirect_url by checkout), any other param that holds a valid code, or the last order saved
+// by checkout.js before leaving for InfinitePay (localStorage, 2 days).
+const CODE = /^RC\d{6}[A-Z0-9]{4}$/;
+const fromQuery = ['pedido', 'code', 'order_nsu', 'receipt']
+  .map((k) => (q.get(k) || '').trim().toUpperCase()).find((c) => CODE.test(c)) || '';
+function lastOrder() {
+  for (const st of ['localStorage', 'sessionStorage']) {
+    try {
+      const raw = window[st].getItem('rc_last_order') || '';
+      const v = raw.startsWith('{') ? JSON.parse(raw) : { code: raw, at: Date.now() };
+      if (CODE.test(v.code || '') && Date.now() - Number(v.at || 0) < 2 * 86400e3) return v.code;
+    } catch { /* private mode */ }
+  }
+  return '';
+}
+let code = fromQuery || lastOrder();
 
 const wa = (text) => `https://wa.me/${CONFIG.CONTACT.whatsappIntl}?text=${encodeURIComponent(text)}`;
 const METHOD = { credit_card: 'Cartão de crédito', pix: 'Pix' };
@@ -16,7 +31,18 @@ const METHOD = { credit_card: 'Cartão de crédito', pix: 'Pix' };
 function show(html) { box.innerHTML = html; }
 
 async function load() {
-  if (!/^RC\d{6}[A-Z0-9]{4}$/.test(code)) {
+  if (!CODE.test(code) && (q.get('transaction_nsu') || q.get('slug'))) {
+    // No code: pagamento resolves only an exact checkout slug; anything else stays "não encontrado".
+    try {
+      const res = await fetch(CONFIG.PAYMENT_API_URL, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ slug: q.get('slug') || '', transaction_nsu: q.get('transaction_nsu') || '', order_nsu: q.get('order_nsu') || '' }),
+      });
+      const o = await res.json();
+      if (res.ok && CODE.test(o.code || '')) { code = o.code; render(o); return; }
+    } catch { /* fall through */ }
+  }
+  if (!CODE.test(code)) {
     show(`<h1 class="co-title">Pedido não encontrado</h1>
       <p>Não achamos o número do pedido neste link. Se você já pagou, fale com a gente no WhatsApp ${esc(CONFIG.CONTACT.whatsapp)}.</p>
       <a class="btn btn-primary" href="loja.html">Voltar à loja</a>`);
@@ -26,7 +52,10 @@ async function load() {
     const res = await fetch(CONFIG.PAYMENT_API_URL, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ order_nsu: code, slug: q.get('slug') || '', transaction_nsu: q.get('transaction_nsu') || '' }),
+      body: JSON.stringify({
+        pedido: code, order_nsu: q.get('order_nsu') || '', slug: q.get('slug') || q.get('invoice_slug') || '',
+        transaction_nsu: q.get('transaction_nsu') || '', receipt_url: q.get('receipt_url') || '',
+      }),
     });
     const o = await res.json();
     if (!res.ok) throw new Error(o.error);

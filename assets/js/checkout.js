@@ -287,7 +287,9 @@ form.addEventListener('submit', async (e) => {
     });
     const data = await res.json().catch(() => ({}));
     if (res.ok && data.url) {
-      try { sessionStorage.setItem('rc_last_order', data.code); } catch { /* private mode */ }
+      const last = JSON.stringify({ code: data.code, at: Date.now() });
+      try { localStorage.setItem('rc_last_order', last); } catch { /* private mode */ }
+      try { sessionStorage.setItem('rc_last_order', last); } catch { /* private mode */ }
       location.href = data.url;
       return;
     }

@@ -124,6 +124,21 @@ function holdText(o) {
 
 // Affiliate commission of one order: the snapshot stored when it was paid (with the seal state),
 // or, while it waits for payment, a note that it is computed at payment time.
+// Automatic SuperFrete label (supabase/functions/_shared/label.ts).
+const LABEL = {
+  creating: 'Etiqueta sendo gerada', created: 'Etiqueta gerada', cart: 'Etiqueta no carrinho SuperFrete (não paga)',
+  skipped: 'Etiqueta não gerada', error: 'Erro na etiqueta',
+};
+function labelHtml(o) {
+  if (o.status !== 'paid' && !o.label_status) return '';
+  const st = o.label_status;
+  if (!st) return '<p class="adm-muted">Etiqueta: não gerada automaticamente</p>';
+  const url = /^https:\/\//.test(o.label_url || '') ? o.label_url : '';
+  return `<p><b>${esc(LABEL[st] || st)}</b>${o.label_price != null ? ` · ${esc(Number(o.label_price).toFixed(2).replace('.', ','))}` : ''}</p>
+    ${url ? `<p><a href="${esc(url)}" target="_blank" rel="noopener">Imprimir etiqueta</a></p>` : ''}
+    ${o.label_error ? `<p class="adm-muted">${esc(o.label_error)}</p>` : ''}`;
+}
+
 function commissionHtml(o) {
   if (o.paid_at) {
     const seal = o.seal ? '<span class="adm-badge is-ok" title="Valores assinados no pagamento">Selado</span>'
@@ -188,6 +203,7 @@ function orderHtml(o, open) {
       ${o.transaction_nsu ? `<p class="adm-muted">NSU ${esc(o.transaction_nsu)}</p>` : ''}
       ${o.ref ? `<p class="adm-muted">Indicação: ${esc(o.ref)}</p>` : ''}
       ${commissionHtml(o)}
+      ${labelHtml(o)}
       <p class="adm-muted">Criado em ${when(o.created_at)}</p>
       ${o.canceled_at ? `<p class="adm-muted">${o.status === 'refunded' ? 'Reembolsado' : 'Cancelado'} em ${when(o.canceled_at)}</p>` : ''}
       ${o.status === 'paid' || o.status === 'pending' ? `<p class="adm-cancel">

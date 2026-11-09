@@ -1,5 +1,5 @@
 // Product page: gallery, sticky buy box, description, related items, SEO tags.
-import { boot, productCard, reviewCard, stars, REVIEW_SOURCES, setNavActive, reveal, pricing, installmentText, freeShipText, money, esc, icon, $, $$ } from './app.js';
+import { boot, productCard, reviewCard, stars, REVIEW_SOURCES, setNavActive, reveal, pricing, installmentText, freeShipText, countdownHtml, money, esc, icon, $, $$ } from './app.js';
 import { CONFIG } from './config.js';
 import { getProduct, getProductReviews } from './data.js';
 
@@ -101,6 +101,7 @@ function buyboxHTML(p, pr, cat) {
         <strong class="now-big">${money(pr.price)}</strong>
         <p class="inst-line">${icon('card', 18)} <span>${pr.n > 1 ? `ou em até <b>${pr.n}x sem juros</b> de ${money(pr.inst)}` : `ou em até <b>${CONFIG.MAX_INSTALLMENTS}x no cartão</b>`}</span></p>
         ${pr.pix != null ? `<p class="pix-row">${icon('pix', 18)} ${money(pr.pix)} no Pix (${CONFIG.PIX_DISCOUNT_PERCENT}% de desconto)</p>` : ''}
+        ${countdownHtml(p, 'offer-timer--pdp')}
       </div>
 
       ${p.stock ? (madeToOrder ? `

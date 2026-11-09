@@ -624,6 +624,37 @@ function footerHTML(categories) {
 
 let catNames = {};
 
+/* ------------------------------------------------------------ offer countdown */
+
+// Products with `countdown: true` in products.json show a timer to the next midnight in São Paulo
+// (UTC-3, no daylight saving). It restarts every day at 00:00. It is an urgency display only: the
+// price itself does not change at midnight (owner, 2026-11-08: RT rastilho pickups).
+export function msToMidnightBRT(now = Date.now()) {
+  const DAY = 86400000;
+  const local = now - 3 * 3600000;
+  return DAY - (((local % DAY) + DAY) % DAY);
+}
+
+function fmtLeft(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(Math.floor(s / 3600))}:${pad(Math.floor((s % 3600) / 60))}:${pad(s % 60)}`;
+}
+
+export function countdownHtml(p, cls = '') {
+  if (!p.countdown || !p.stock || !pricing(p).onSale) return '';
+  return `<div class="offer-timer ${cls}" data-countdown>${icon('clock', 14)}<span>Oferta termina em <b data-countdown-left>${fmtLeft(msToMidnightBRT())}</b></span></div>`;
+}
+
+let countdownTimer = null;
+export function startCountdowns() {
+  if (countdownTimer) return;
+  countdownTimer = setInterval(() => {
+    const t = fmtLeft(msToMidnightBRT());
+    document.querySelectorAll('[data-countdown-left]').forEach((el) => { if (el.textContent !== t) el.textContent = t; });
+  }, 1000);
+}
+
 // opts.bn: Black November deal card (home carousel), with the campaign seal in place of the
 // red discount tag and an optional ribbon (opts.note, e.g. "Oferta única").
 export function productCard(p, opts = {}) {
@@ -652,6 +683,7 @@ export function productCard(p, opts = {}) {
       </div>
       <div class="card-inst">${installmentText(pr)}</div>
       ${pr.pix != null ? `<div class="card-pix">${icon('pix', 13)} ${money(pr.pix)} no Pix</div>` : ''}
+      ${countdownHtml(p, 'offer-timer--card')}
     </div>
     ${p.stock
       ? `<button class="card-buy" type="button" data-add="${p.id}" aria-label="Adicionar ${esc(p.name)} ao carrinho">${icon('bag', 17)} Comprar</button>`
@@ -915,6 +947,7 @@ function onClick(e) {
  */
 export async function boot({ active = '' } = {}) {
   captureRefFromUrl();
+  startCountdowns();
 
   const header = $('[data-header]');
   const footer = $('[data-footer]');

@@ -863,20 +863,6 @@
         "assets/img/wp/2021-09-51cicuovl-ac-sy450.webp"
       ],
       "desc": "Compacta e fácil de levar. Entrada 6,35 mm para guitarra, baixo, teclado, microfone ou mixer; saída 6,35 mm para amplificador; fone 3,5 mm e plugue 3,5 mm para smartphone."
-    },
-    {
-      "id": 999002,
-      "name": "Item de teste InfinitePay",
-      "slug": "teste-pagamento-k7q2",
-      "cat": "captadores",
-      "price": 3,
-      "regular": 3,
-      "stock": true,
-      "hidden": true,
-      "freeShipping": true,
-      "img": "assets/img/wp/2024-06-fotos-mercado-livre-e-site-11.webp",
-      "imgs": [],
-      "desc": "Item interno de teste de pagamento."
     }
   ]
 }
